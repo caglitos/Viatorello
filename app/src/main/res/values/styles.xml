@@ -1,0 +1,29 @@
+<resources>
+
+    <style name="CustomAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <!-- Cambiar el color de fondo del diálogo -->
+        <item name="android:background">@android:color/black</item>
+
+        <!-- Configurar el color del texto -->
+        <item name="android:textColor">@android:color/white</item>
+
+        <!-- Estilos personalizados para los botones -->
+        <item name="buttonBarPositiveButtonStyle">@style/CustomButtonStyle</item>
+        <item name="buttonBarNegativeButtonStyle">@style/CustomButtonStyle</item>
+        <!-- Cambiar el fondo del diálogo con esquinas redondeadas -->
+        <item name="android:windowBackground">@drawable/border_light</item>
+    </style>
+
+
+    <!-- Estilo personalizado para los botones del diálogo -->
+    <style name="CustomButtonStyle" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:background">@drawable/border_gray
+        </item> <!-- Aplica el fondo personalizado -->
+        <item name="android:textColor">@android:color/white</item> <!-- Texto blanco -->
+        <item name="android:padding">16dp</item> <!-- Agrega padding interno -->
+        <item name="android:layout_marginStart">4dp</item>
+        <item name="android:layout_marginEnd">4dp</item>
+    </style>
+
+</resources>
+

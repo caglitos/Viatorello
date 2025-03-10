@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="schedule">Programar:</string>
+    <string name="minRate">Terifa Minima:</string>
+    <string name="driver">Chofer:</string>
+    <string name="number">Numero:</string>
+    <string name="time">Tiempo:</string>
+    <string name="pets">Mascotas</string>
+    <string name="car">Auto:</string>
+    <string name="title_activity_login">Inicia Secion</string>
+    <string name="prompt_email">Correo Electronico</string>
+    <string name="prompt_password">Contraseña</string>
+    <string name="action_sign_in">Iniciar Sesion</string>
+    <string name="action_register">Registarte</string>
+    <string name="action_sign_in_short">Sign In</string>
+    <string name="welcome">Bienvenido!!</string>
+    <string name="invalid_username">Nombre de usuario invalido</string>
+    <string name="invalid_password">La contraseña debe coneter >5 caracteres</string>
+    <string name="login_failed">Inicio Fallido</string>
+    <string name="message_log">¿No se ha registrado? Registrate</string>
+    <string name="Here">Aqui.</string>
+    <string name="now">Ahora</string>
+    <string name="taxi">Taxi</string>
+    <string name="bus">Bus</string>
+    <string name="Delivery">Despensa</string>
+    <string name="direction">Direccion:</string>
+    <string name="notepay">NOTA: EL TIEMPO DE LLEGADA DEPENDERA DEL TIEMPO DE ESPERA AL PAGO</string>
+    <string name="street">Calle: (Calle Independencia)</string>
+    <string name="number_street">Numero: (#123)</string>
+    <string name="colony">Colonia: (Centro)</string>
+    <string name="State">Estado: (Veracruz)</string>
+    <string name="city">Ciudad: (Xalapa)</string>
+    <string name="CP">Código Postal: (C.P.91000)</string>
+    <string name="Country">Pais: México</string>
+    <string name="rate">Tarifa:</string>
+    <string name="Pay">Pagar</string>
+</resources>
