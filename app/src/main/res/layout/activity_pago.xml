@@ -182,16 +182,30 @@
         android:layout_marginTop="24dp"
         android:background="@drawable/border_gray"
         android:padding="16dp"
-        tools:text="Dentro de la Hermana de Diaz"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="@id/tvTarjeta"
-        app:layout_constraintTop_toBottomOf="@id/tvTarifa1" />
+        app:layout_constraintTop_toBottomOf="@id/tvTarifa1"
+        tools:text="Lugar" />
 
-
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_light"
+        android:padding="16dp"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:text="@string/Pay"
+        android:textAllCaps="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvDestino"
+        app:layout_constraintBottom_toTopOf="@id/clMenu"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clMenu"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -243,6 +257,5 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

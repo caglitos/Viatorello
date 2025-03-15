@@ -54,11 +54,18 @@ class taxiDestinoActivity : AppCompatActivity(), OnMapReadyCallback {
                 .setNegativeButton("Cancelar", null)
                 .show()
         }
+
+
     }
 
     private fun initComponents() {
         initMap()
         initEtDireccion()
+
+        val pagar = findViewById<Button>(R.id.bPay)
+        pagar.setOnClickListener{
+            startActivity(Intent(this, PagoActivity::class.java))
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
