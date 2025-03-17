@@ -34,4 +34,7 @@
     <string name="Country">Pais: México</string>
     <string name="rate">Tarifa:</string>
     <string name="Pay">Pagar</string>
+    <string name="card">Tarjeta</string>
+    <string name="destiny">Destino</string>
+    <string name="cuenta">Cuenta</string>
 </resources>

@@ -6,11 +6,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
-class busActivity : AppCompatActivity() {
+class TerminosActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_bus)
+        setContentView(R.layout.activity_terminos)
 
     }
+
+
 }

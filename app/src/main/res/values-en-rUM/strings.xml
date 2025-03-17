@@ -34,4 +34,7 @@
     <string name="Country">Contry: (México)</string>
     <string name="rate">Rate:</string>
     <string name="Pay">Pay</string>
+    <string name="card">Card</string>
+    <string name="destiny">Destiny</string>
+    <string name="cuenta">Account</string>
 </resources>

@@ -23,7 +23,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         initMap()
         initBotMenu()
         initDestino()
+        val ajustes = findViewById<Button>(R.id.ivMenu)
 
+        ajustes.setOnClickListener{
+            startActivity(Intent(this, TerminosActivity::class.java))
+        }
 
     }
 
