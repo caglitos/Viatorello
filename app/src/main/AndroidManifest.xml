@@ -22,16 +22,10 @@
             android:name=".PagoActivity"
             android:exported="false" />
         <activity
-            android:name=".paogActivity"
-            android:exported="false" />
-        <activity
             android:name=".taxiDestinoActivity"
             android:exported="false" />
         <activity
             android:name=".despensaActivity"
-            android:exported="false" />
-        <activity
-            android:name=".despenaActivity"
             android:exported="false" />
         <activity
             android:name=".busActivity"
