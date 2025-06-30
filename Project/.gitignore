@@ -1,0 +1,25 @@
+# Ignorar archivos y carpetas de Android
+Android/*.iml
+Android/.gradle/
+Android/local.properties
+Android/.idea/
+Android/.DS_Store
+Android/build/
+Android/captures/
+Android/.externalNativeBuild/
+Android/.cxx
+
+# Ignorar archivos y carpetas de Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Ignorar archivos de entorno
+.env
+.env.*
+
+# Otros archivos comunes
+.DS_Store

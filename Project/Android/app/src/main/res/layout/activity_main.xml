@@ -32,7 +32,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/mapa"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+
         android:layout_width="380dp"
         android:layout_height="220dp"
         android:layout_marginTop="64dp"

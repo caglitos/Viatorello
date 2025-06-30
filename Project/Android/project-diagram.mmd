@@ -1,0 +1,31 @@
+graph LR
+    classDef activity fill:#b3e5fc,stroke:#0288d1,stroke-width:2px
+    classDef feature fill:#c8e6c9,stroke:#388e3c,stroke-width:2px
+    classDef dependency fill:#ffe0b2,stroke:#f57c00,stroke-width:2px
+    
+    Loading((Loading)) --> Main((MainActivity))
+    
+    %% Activities
+    Main --> Bus((Bus))
+    Main --> Despensa((Despensa))
+    Main --> Taxi((TaxiDestino))
+    Main --> Pago((Pago))
+    Main --> Terms((Términos))
+    Main --> Login((Login))
+    
+    %% Features
+    Main --- Maps{Google Maps}
+    Main --- Loc{Location Services}
+    Main --- Nav{Navigation}
+    Pago --- Pay{Payment System}
+    
+    %% Core Dependencies
+    Main -.-> AndroidX[AndroidX]
+    Main -.-> Material[Material Design]
+    Maps -.-> GMaps[Maps SDK]
+    Main -.-> Layout[ConstraintLayout]
+    
+    %% Styling
+    class Loading,Main,Bus,Despensa,Taxi,Pago,Terms,Login activity
+    class Maps,Loc,Nav,Pay feature
+    class AndroidX,Material,GMaps,Layout dependency
