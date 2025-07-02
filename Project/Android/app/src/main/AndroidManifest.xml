@@ -2,10 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Permisos -->
+    <!-- Permisos para OSMDroid -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -34,10 +36,6 @@
             android:name=".busActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.login.LoginActivity"
-            android:exported="true"
-            android:label="@string/title_activity_login" />
-        <activity
             android:name=".MainActivity"
             android:exported="true" />
         <activity
@@ -49,10 +47,7 @@
             </intent-filter>
         </activity>
 
-        <!-- API Key de Google Maps (REEMPLAZA esto por tu clave real) -->
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AQUI_TU_CLAVE_REAL" />
+        <!-- OSMDroid no necesita API Key - ¡100% gratis! -->
 
     </application>
 
