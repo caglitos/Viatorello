@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <!-- Permisos -->
+
+    <!-- Permisos para OSMDroid -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -15,9 +18,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity
-            android:name=".LogInActivity"
-            android:exported="false" />
+
         <!-- Actividades -->
         <activity
             android:name=".TerminosActivity"
@@ -35,10 +36,6 @@
             android:name=".busActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.login.LoginActivity"
-            android:exported="true"
-            android:label="@string/title_activity_login" />
-        <activity
             android:name=".MainActivity"
             android:exported="true" />
         <activity
@@ -46,13 +43,12 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- API Key de Google Maps (REEMPLAZA esto por tu clave real) -->
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AQUI_TU_CLAVE_REAL" />
+        </activity>
+
+        <!-- OSMDroid no necesita API Key - ¡100% gratis! -->
+
     </application>
 
 </manifest>

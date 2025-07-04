@@ -45,9 +45,15 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation("com.google.android.gms:play-services-maps:17.0.0")
+    // OSMDroid para mapas gratuitos
+    implementation("org.osmdroid:osmdroid-android:6.1.18")
+    
+    // Networking para APIs
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+    
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.0")
-    implementation ("com.google.android.gms:play-services-maps:18.2.0")
     implementation(libs.androidx.annotation)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
