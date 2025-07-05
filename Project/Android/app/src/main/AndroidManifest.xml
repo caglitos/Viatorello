@@ -24,6 +24,9 @@
             android:name=".TerminosActivity"
             android:exported="false" />
         <activity
+            android:name=".LogInActivity"
+            android:exported="false" />
+        <activity
             android:name=".PagoActivity"
             android:exported="false" />
         <activity

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="#262626"/>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#00000000"/> <!-- Relleno transparente -->
     <stroke
         android:width="2dp"
-        android:color="#fff" />
-    <corners android:radius="32dp"/>
+        android:color="@color/gray" /> <!-- Asegúrate que @color/gray esté definido y sea visible -->
+    <corners android:radius="32dp"/> <!-- Ajusta el radio según necesites, o 0dp para esquinas rectas -->
 </shape>

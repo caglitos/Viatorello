@@ -21,29 +21,29 @@ const userSchema = new mongoose.Schema(
     currentLocation: {
       type: {
         type: String,
-        enum: ['Point'],
-        default: 'Point'
+        enum: ["Point"],
+        default: "Point",
       },
       coordinates: {
         type: [Number], // [longitude, latitude]
-        required: false
-      }
+        required: false,
+      },
     },
     // Estado de conexión del usuario
     isOnline: {
       type: Boolean,
-      default: false
+      default: false,
     },
     lastLocationUpdate: {
       type: Date,
-      default: null
+      default: null,
     },
     // Información del viaje actual (si está en uno)
     currentTrip: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Trip',
-      default: null
-    }
+      ref: "Trip",
+      default: null,
+    },
   },
   {
     timestamps: true,
@@ -51,6 +51,6 @@ const userSchema = new mongoose.Schema(
 );
 
 // Crear índice geoespacial para consultas de ubicación eficientes
-userSchema.index({ currentLocation: '2dsphere' });
+userSchema.index({ currentLocation: "2dsphere" });
 
 export default mongoose.model("User", userSchema);

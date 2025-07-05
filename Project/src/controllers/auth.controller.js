@@ -3,15 +3,28 @@ import User from "../models/user.model.js";
 import { createAccesToken } from "../libs/jwt.js";
 
 export const register = async (req, res) => {
-  const { username, email, password } = req.body;
+  const {
+    username,
+    email,
+    password,
+    currentLocation,
+    isOnline,
+    lastLocationUpdate,
+    currentTrip,
+  } = req.body;
 
   try {
     const passwordHash = await bcrypt.hash(password, 10);
 
+    // Solo asigna los campos definidos en el modelo de Mongoose
     const newUser = new User({
       username,
       email,
       password: passwordHash,
+      currentLocation: currentLocation || [],
+      isOnline: false,
+      lastLocationUpdate: null,
+      currentTrip: null,
     });
 
     const userSaved = await newUser.save();
@@ -26,6 +39,7 @@ export const register = async (req, res) => {
       updatedAt: userSaved.updatedAt,
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

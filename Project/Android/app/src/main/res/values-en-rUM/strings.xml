@@ -8,8 +8,8 @@
     <string name="pets">Pets:</string>
     <string name="car">Car:</string>
     <string name="title_activity_login">Log In</string>
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_register">Log In</string>
     <string name="action_sign_in_short">Sign in</string>
@@ -37,4 +37,6 @@
     <string name="card">Card</string>
     <string name="destiny">Destiny</string>
     <string name="cuenta">Account</string>
+    <string name="name">Username</string>
+    <string name="forgotPassword">Forgot your pasword?</string>
 </resources>

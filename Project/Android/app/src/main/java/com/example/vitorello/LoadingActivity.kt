@@ -9,9 +9,9 @@ class LoadingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        setContentView(R.layout.activity_loading)
 
-        // Simplemente navegar a MainActivity
-        startActivity(Intent(this, MainActivity::class.java))
-        finish()
+        startActivity(Intent(this, LogInActivity::class.java))
+
     }
 }
