@@ -13,7 +13,6 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
-
 fun postRequest(url: String, jsonBody: String, callback: (String?, Exception?) -> Unit) {
     val client = OkHttpClient()
 
