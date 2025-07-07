@@ -19,6 +19,8 @@ app.use(
       "http://10.0.2.2:5173", // Android emulator accessing local dev server
       "http://localhost:8081", // Example: React Native Metro bundler
       "http://10.0.2.2:8081", // Android emulator for Metro
+      "http://localhost:46216",
+      "http://10.0.2.2:46216",
     ],
     credentials: true,
   })

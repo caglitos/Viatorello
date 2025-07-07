@@ -1,5 +1,10 @@
 import { z } from "zod";
 
+const locationSchema = z.object({
+  type: z.literal("Point"),
+  coordinates: z.tuple([z.number(), z.number()]),
+});
+
 // auth.schema.js
 export const registerSchema = z.object({
   username: z
@@ -17,6 +22,17 @@ export const registerSchema = z.object({
     .regex(/[A-Z]/, {
       message: "Password must contain at least one uppercase letter",
     }),
+
+  currentLocation: locationSchema.optional().default({
+    type: "Point",
+    coordinates: [0, 0],
+  }),
+
+  isOnline: z.boolean().default(false),
+
+  lastLocationUpdate: z.string().datetime().nullable().default(null),
+
+  currentTrip: z.boolean().default(false),
 });
 
 export const loginSchema = z.object({

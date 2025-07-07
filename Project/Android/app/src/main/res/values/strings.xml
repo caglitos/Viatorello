@@ -10,8 +10,8 @@
     <string name="title_activity_login">Inicia Sesion</string>
     <string name="email">Correo Electronico</string>
     <string name="password">Contraseña</string>
-    <string name="action_sign_in">Sign in</string>
-    <string name="action_register">Registrate</string>
+    <string name="sign_in">Sign in</string>
+    <string name="register"><u>Registrate</u></string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">Bienvenido!!</string>
     <string name="invalid_username">Nombre de usuario invalido</string>
@@ -41,5 +41,4 @@
     <string name="cuenta">Cuenta</string>
     <string name="name">Nombre de Usuario</string>
     <string name="forgotPassword"><u>¿Olvidaste tu contraseña?</u></string>
-    <string name="LogIn" translatable="false">LogIn</string>
 </resources>

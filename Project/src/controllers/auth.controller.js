@@ -3,6 +3,8 @@ import User from "../models/user.model.js";
 import { createAccesToken } from "../libs/jwt.js";
 
 export const register = async (req, res) => {
+  console.log("Register body:", req.body);
+
   const {
     username,
     email,
@@ -21,10 +23,13 @@ export const register = async (req, res) => {
       username,
       email,
       password: passwordHash,
-      currentLocation: currentLocation || [],
-      isOnline: false,
-      lastLocationUpdate: null,
-      currentTrip: null,
+      currentLocation: currentLocation || {
+        type: "Point",
+        coordinates: [0, 0],
+      },
+      isOnline: isOnline || false,
+      lastLocationUpdate: lastLocationUpdate || null,
+      currentTrip: currentTrip || null,
     });
 
     const userSaved = await newUser.save();
