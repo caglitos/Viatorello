@@ -20,7 +20,7 @@ yarn.lock
 # Ignorar archivos de entorno
 .env
 .env.*
-Project/Android/app/src/main/java/com/example/vitorello/env.kt
+Android/app/src/main/java/com/example/vitorello/env.kt
 
 # Otros archivos comunes
 .DS_Store
