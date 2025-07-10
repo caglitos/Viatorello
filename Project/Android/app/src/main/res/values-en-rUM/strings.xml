@@ -39,4 +39,6 @@
     <string name="cuenta">Account</string>
     <string name="name">Username</string>
     <string name="forgotPassword">Forgot your pasword?</string>
+    <string name="LogInError">Fail to SignIn</string>
+    <string name="LogInSucces">LogIn Succes</string>
 </resources>

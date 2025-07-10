@@ -39,4 +39,6 @@
     <string name="cuenta">Cuenta</string>
     <string name="name">Nombre de Usuario</string>
     <string name="forgotPassword">¿Olvidaste tu contraseña?</string>
+    <string name="LogInError">Error al iniciar secion</string>
+    <string name="LogInSucces">Inicion sesada</string>
 </resources>

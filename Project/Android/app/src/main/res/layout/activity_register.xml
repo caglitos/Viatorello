@@ -5,28 +5,28 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    tools:context=".signInActivity">
+    tools:context=".RegisterActivity">
 
     <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="424dp"
+        android:layout_height="424dp"
+        android:layout_marginTop="-189dp"
+        android:layout_marginEnd="-220dp"
+        android:src="@drawable/circle"
+        android:tint="@color/blue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        android:layout_width="350dp"
-        android:layout_height="350dp"
-        android:layout_marginStart="-194dp"
-        android:layout_marginBottom="-204dp"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="432dp"
+        android:layout_height="432dp"
+        android:layout_marginStart="-187dp"
+        android:layout_marginBottom="-233dp"
         android:src="@drawable/circle"
         android:tint="@color/lightBlue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-    <androidx.appcompat.widget.AppCompatImageView
-        android:layout_width="500dp"
-        android:layout_height="500dp"
-        android:layout_marginEnd="-172dp"
-        android:layout_marginBottom="-298dp"
-        android:src="@drawable/circle"
-        android:tint="@color/blue"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ivLogo"
@@ -40,39 +40,15 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/userNameLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_marginStart="18dp"
-        android:layout_marginTop="25dp"
-        android:text="@string/name"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@id/userNameInput"
-        app:layout_constraintTop_toBottomOf="@+id/ivLogo" />
-
-    <EditText
-        android:id="@+id/userNameInput"
-        android:layout_width="279dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/border_gray"
-        android:hint="@string/name"
-        android:paddingStart="16dp"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userNameLabel" />
-
-    <TextView
         android:id="@+id/emailLabel"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="34dp"
+        android:layout_marginTop="25dp"
         android:text="@string/email"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@id/emailInput"
-        app:layout_constraintTop_toBottomOf="@+id/userNameInput" />
+        app:layout_constraintTop_toBottomOf="@+id/ivLogo" />
 
     <EditText
         android:id="@+id/emailInput"
@@ -87,6 +63,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/emailLabel"
         tools:ignore="RtlSymmetry" />
+
+    <TextView
+        android:id="@+id/emailMsg"
+        android:layout_width=""
+        android:layout_height="" />
 
     <TextView
         android:id="@+id/passwordLabel"
@@ -113,14 +94,39 @@
         app:layout_constraintTop_toBottomOf="@id/passwordLabel" />
 
     <TextView
-        android:id="@+id/passwordMsg"
+        android:id="@+id/passwordConfirmLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="34dp"
+        android:text="Confirmar contraseña"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@id/passwordConfirmInput"
+        app:layout_constraintTop_toBottomOf="@id/passwordInput" />
+
+    <EditText
+        android:id="@+id/passwordConfirmInput"
+        android:layout_width="279dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/border_gray"
+        android:hint="@string/password"
+        android:paddingLeft="16dp"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/passwordConfirmLabel" />
+
+    <TextView
+        android:id="@+id/passwordConfirmMsg"
         android:layout_width="263dp"
         android:layout_height="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:textColor="@color/red"
-        app:layout_constraintStart_toStartOf="@id/passwordInput"
-        app:layout_constraintTop_toBottomOf="@id/passwordInput"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/passwordConfirmInput"
         tools:text="Error" />
 
     <TextView
@@ -133,7 +139,7 @@
         android:textColor="@color/blue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/passwordMsg" />
+        app:layout_constraintTop_toBottomOf="@id/passwordConfirmMsg" />
 
     <TextView
         android:id="@+id/register"

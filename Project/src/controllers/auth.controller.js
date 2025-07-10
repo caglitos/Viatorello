@@ -3,7 +3,7 @@ import User from "../models/user.model.js";
 import { createAccesToken } from "../libs/jwt.js";
 
 export const register = async (req, res) => {
-  console.log("Register body:", req.body);
+  console.log(req.body);
 
   const {
     username,
@@ -20,8 +20,8 @@ export const register = async (req, res) => {
 
     // Solo asigna los campos definidos en el modelo de Mongoose
     const newUser = new User({
-      username,
-      email,
+      username: username.trim(),
+      email: email.toLowerCase().trim(),
       password: passwordHash,
       currentLocation: currentLocation || {
         type: "Point",
@@ -42,6 +42,11 @@ export const register = async (req, res) => {
       email: userSaved.email,
       createdAt: userSaved.createdAt,
       updatedAt: userSaved.updatedAt,
+      currentLocation: userSaved.currentLocation,
+      isOnline: userSaved.isOnline,
+      lastLocationUpdate: userSaved.lastLocationUpdate,
+      currentTrip: userSaved.currentTrip,
+      token: token,
     });
   } catch (error) {
     console.log(error);
@@ -53,7 +58,7 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const userFound = await User.findOne({ email });
+    const userFound = await User.findOne({ email: email.toLowerCase().trim() });
 
     if (!userFound) return res.status(404).json({ message: "User not found" });
 
@@ -71,6 +76,11 @@ export const login = async (req, res) => {
       email: userFound.email,
       createdAt: userFound.createdAt,
       updatedAt: userFound.updatedAt,
+      currentLocation: userFound.currentLocation,
+      isOnline: userFound.isOnline,
+      lastLocationUpdate: userFound.lastLocationUpdate,
+      currentTrip: userFound.currentTrip,
+      token: token,
     });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
