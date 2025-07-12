@@ -7,10 +7,9 @@
     <string name="time">Tiempo:</string>
     <string name="pets">Mascotas</string>
     <string name="car">Auto:</string>
-    <string name="title_activity_login">Inicia Secion</string>
+    <string name="LogIn">Inicia Secion</string>
     <string name="email">Correo Electronico</string>
     <string name="password">Contraseña</string>
-    <string name="sign_in">Iniciar Sesion</string>
     <string name="register">Registarte</string>
     <string name="action_sign_in_short">Sign In</string>
     <string name="welcome">Bienvenido!!</string>
@@ -41,4 +40,5 @@
     <string name="forgotPassword">¿Olvidaste tu contraseña?</string>
     <string name="LogInError">Error al iniciar secion</string>
     <string name="LogInSucces">Inicion sesada</string>
+    <string name="confirmPassword">Confirmar contraseña</string>
 </resources>

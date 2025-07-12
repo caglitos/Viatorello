@@ -154,7 +154,7 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/border_fill"
         android:backgroundTint="@color/green"
-        android:text="@string/sign_in"
+        android:text="@string/LogIn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/register" />

@@ -14,7 +14,6 @@
         <item name="android:windowBackground">@drawable/border_light</item>
     </style>
 
-
     <!-- Estilo personalizado para los botones del diálogo -->
     <style name="CustomButtonStyle" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:background">@drawable/border_gray
@@ -25,5 +24,11 @@
         <item name="android:layout_marginEnd">4dp</item>
     </style>
 
-</resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
 
+</resources>

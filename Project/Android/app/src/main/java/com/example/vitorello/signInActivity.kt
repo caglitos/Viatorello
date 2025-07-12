@@ -1,39 +1,59 @@
 package com.example.vitorello
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.Html
 import android.util.Log
+import android.view.View
+import android.view.WindowManager
+
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 
+@Suppress("DEPRECATION")
 class signInActivity : AppCompatActivity() {
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        // Hacer barra de notificaciones y navegación transparentes
+        window.insetsController?.let { controller ->
+            controller.hide(android.view.WindowInsets.Type.statusBars() or android.view.WindowInsets.Type.navigationBars())
+            controller.systemBarsBehavior = android.view.WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
+        window.setDecorFitsSystemWindows(false)
+        window.statusBarColor = android.graphics.Color.TRANSPARENT
+        window.navigationBarColor = android.graphics.Color.TRANSPARENT
+
         setContentView(R.layout.activity_sign_in)
+
         initComponent()
     }
 
     private fun initComponent() {
-        formatHtml()
 //        isAuth()
-
-        val register: TextView = findViewById(R.id.register)
-        register.setOnClickListener {
-            startActivity(Intent(this, RegisterActivity::class.java))
-        }
+        formatHtml()
+        initRegisterText()
 
         lifecycleScope.launch {
             logIn()
+        }
+
+    }
+
+    private fun initRegisterText() {
+        val register: TextView = findViewById(R.id.register)
+
+        register.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
         }
     }
 
@@ -65,7 +85,7 @@ class signInActivity : AppCompatActivity() {
 
             Log.d("LogIn", "LogIn: $json")
 
-            postRequest("http://10.0.2.2:3000/api/login", json) { res, error ->
+            postRequest("https://viatorello-production.up.railway.app/api/login", json) { res, error ->
                 runOnUiThread {
                     if (error != null) {
                         registerError()
