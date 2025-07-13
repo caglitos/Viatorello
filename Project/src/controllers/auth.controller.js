@@ -1,7 +1,24 @@
 import bcrypt from "bcryptjs";
+import mongoose from "mongoose";
 import User from "../models/user.model.js";
 import { createAccesToken } from "../libs/jwt.js";
 
+/**
+ * @file auth.controller.js
+ * @description Controller for handling user authentication operations such as registration, login, logout, and profile retrieval.
+ * @requires bcryptjs
+ * @requires ../models/user.model.js
+ * @requires ../libs/jwt.js
+ * @exports register, login, logout, profile
+ * @module controllers/auth.controller
+ *
+ * This module provides functions to register a new user, log in an existing user, log out a user, and retrieve the user's profile.
+ * Each function interacts with the User model and handles JWT token creation for session management.
+ */
+
+/**
+ * This function generates a new user and saves it to the database.
+ */
 export const register = async (req, res) => {
   console.log(req.body);
 
@@ -54,8 +71,18 @@ export const register = async (req, res) => {
   }
 };
 
+/**
+ * This function logs in a user by verifying their credentials and updating their session information.
+ */
 export const login = async (req, res) => {
-  const { email, password } = req.body;
+  const {
+    email,
+    password,
+    currentLocation,
+    isOnline,
+    lastLocationUpdate,
+    currentTrip,
+  } = req.body;
 
   try {
     const userFound = await User.findOne({ email: email.toLowerCase().trim() });
@@ -66,6 +93,25 @@ export const login = async (req, res) => {
 
     if (!isMatch)
       return res.status(401).json({ message: "Invalid credentials" });
+
+    userFound.isOnline = isOnline || userFound.isOnline;
+    userFound.currentLocation = currentLocation || userFound.currentLocation;
+    userFound.lastLocationUpdate =
+      lastLocationUpdate || userFound.lastLocationUpdate;
+
+    // Manejar currentTrip - puede ser false, null, o un ObjectId válido
+    if (currentTrip !== undefined) {
+      userFound.currentTrip = currentTrip;
+    }
+
+    console.log("userFound before save:", {
+      currentTrip: userFound.currentTrip,
+      currentLocation: userFound.currentLocation,
+      isOnline: userFound.isOnline,
+    });
+    console.log("Request currentTrip:", currentTrip);
+
+    await userFound.save();
 
     const token = await createAccesToken({ id: userFound._id });
 
@@ -83,15 +129,22 @@ export const login = async (req, res) => {
       token: token,
     });
   } catch (error) {
+    console.error("Login error:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
+/**
+ * This function logs out a user by clearing their session token.
+ */
 export const logout = (req, res) => {
   res.cookie("token", "", { expires: new Date(0) });
   return res.sendStatus(200);
 };
 
+/**
+ * This function retrieves the profile of the currently authenticated user.
+ */
 export const profile = async (req, res) => {
   const userFound = await User.findById(req.user.id);
 
@@ -103,7 +156,7 @@ export const profile = async (req, res) => {
     id: userFound._id,
     username: userFound.username,
     email: userFound.email,
-    createdAt: userFound.createdAt,
-    updatedAt: userFound.updatedAt,
+    isOnline: userFound.isOnline,
+    currentLocation: userFound.currentLocation,
   });
 };

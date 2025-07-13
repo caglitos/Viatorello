@@ -40,7 +40,7 @@ const userSchema = new mongoose.Schema(
     },
     // Información del viaje actual (si está en uno)
     currentTrip: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Boolean,
       ref: "Trip",
       default: null,
     },

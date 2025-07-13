@@ -19,20 +19,15 @@ import androidx.core.view.ViewCompat
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 
-@Suppress("DEPRECATION")
 class signInActivity : AppCompatActivity() {
-    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Hacer barra de notificaciones y navegación transparentes
-        window.insetsController?.let { controller ->
-            controller.hide(android.view.WindowInsets.Type.statusBars() or android.view.WindowInsets.Type.navigationBars())
-            controller.systemBarsBehavior = android.view.WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        }
-        window.setDecorFitsSystemWindows(false)
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
         window.statusBarColor = android.graphics.Color.TRANSPARENT
         window.navigationBarColor = android.graphics.Color.TRANSPARENT
-
         setContentView(R.layout.activity_sign_in)
 
         initComponent()
@@ -83,11 +78,11 @@ class signInActivity : AppCompatActivity() {
                 }
             """.trimIndent()
 
-            Log.d("LogIn", "LogIn: $json")
-
-            postRequest("https://viatorello-production.up.railway.app/api/login", json) { res, error ->
+            
+            postRequest("http://10.0.2.2:3000/api/login", json) { res, error ->
                 runOnUiThread {
                     if (error != null) {
+                        Log.d("SignIn", "logIn: Error $error")
                         registerError()
                     } else {
                         registeredSuccessful(res)
