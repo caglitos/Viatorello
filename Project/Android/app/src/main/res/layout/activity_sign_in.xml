@@ -18,6 +18,7 @@
         android:tint="@color/lightBlue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
     <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="500dp"
         android:layout_height="500dp"
@@ -57,6 +58,7 @@
         android:layout_marginTop="8dp"
         android:background="@drawable/border_gray"
         android:hint="@string/name"
+        android:inputType="textPersonName"
         android:paddingStart="16dp"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -81,6 +83,7 @@
         android:layout_marginTop="8dp"
         android:background="@drawable/border_gray"
         android:hint="@string/email"
+        android:inputType="textEmailAddress"
         android:paddingStart="16dp"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -106,6 +109,7 @@
         android:layout_marginTop="8dp"
         android:background="@drawable/border_gray"
         android:hint="@string/password"
+        android:inputType="textPassword"
         android:paddingLeft="16dp"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"

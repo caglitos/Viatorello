@@ -23,7 +23,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     fun initComponent() {
-//        isAuth()
+        isAuth()
         val logInText: TextView = findViewById(R.id.LogIN)
 
         logInText.setOnClickListener {

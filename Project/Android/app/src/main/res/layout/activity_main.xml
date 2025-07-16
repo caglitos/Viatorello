@@ -3,19 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:padding="24dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@color/white"
     tools:context=".MainActivity">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ivLogo"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="48dp"
+
         android:src="@drawable/isotipo"
-        android:tint="@color/white"
+        android:tint="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,52 +23,53 @@
         android:id="@+id/ivMenu"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginTop="48dp"
-        android:layout_marginEnd="16dp"
+
         android:src="@drawable/icmenu"
-        android:tint="@color/white"
+        android:tint="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Mapa de OpenStreetMap -->
     <org.osmdroid.views.MapView
         android:id="@+id/mapa"
-        android:layout_width="380dp"
+        android:layout_width="match_parent"
         android:layout_height="220dp"
-        android:layout_marginTop="64dp"
+        android:background="@drawable/border_light"
+        app:layout_constraintBottom_toTopOf="@id/clChofer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivLogo" />
+        app:layout_constraintTop_toBottomOf="@id/ivLogo" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clChofer"
-        android:layout_width="380dp"
+        android:layout_width="match_parent"
         android:layout_height="220dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/border"
+        app:layout_constraintBottom_toTopOf="@id/tvTarifaMin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mapa">
+        app:layout_constraintTop_toBottomOf="@id/mapa">
 
         <LinearLayout
             android:id="@+id/llDatos"
             android:layout_width="140dp"
             android:layout_height="168dp"
-            android:layout_marginStart="16dp"
-            tools:background="@drawable/border"
+
             android:gravity="center"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/ivFoto"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@drawable/border">
 
             <TextView
                 android:id="@+id/tvChofer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="20sp"
                 tools:text="@string/driver" />
 
@@ -76,7 +77,7 @@
                 android:id="@+id/tvNumero"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="20sp"
                 tools:text="@string/number" />
 
@@ -84,7 +85,7 @@
                 android:id="@+id/tvTiempo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="20sp"
                 tools:text="@string/time" />
 
@@ -92,7 +93,7 @@
                 android:id="@+id/tvAuto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="20sp"
                 tools:text="@string/car" />
 
@@ -100,7 +101,7 @@
                 android:id="@+id/tvMascota"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="20sp"
                 tools:text="@string/pets" />
         </LinearLayout>
@@ -109,11 +110,11 @@
             android:id="@+id/ivFoto"
             android:layout_width="140dp"
             android:layout_height="168dp"
-            tools:background="@drawable/border"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/llDatos"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@drawable/border" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -122,29 +123,32 @@
         android:id="@+id/tvTarifaMin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="50dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="10dp"
         android:text="@string/minRate"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/clProgramar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/clChofer" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clProgramar"
-        android:layout_width="360dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="12dp"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTarifaMin">
+        app:layout_constraintTop_toBottomOf="@id/tvTarifaMin">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="12dp"
+            android:layout_marginStart="24dp"
             android:text="@string/schedule"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -154,10 +158,11 @@
             android:layout_width="78dp"
             android:layout_height="48dp"
             android:background="@drawable/border"
+            android:backgroundTint="@color/lightGray"
             android:hint="@string/now"
             android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textColorHint="@color/gray"
+            android:textColor="@color/black"
+            android:textColorHint="@color/lightGray"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -166,13 +171,13 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottomBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintStart_toStartOf="parent">
 
         <Button
             android:id="@+id/bTaxi"
@@ -182,7 +187,7 @@
             android:layout_marginEnd="10dp"
             android:background="@drawable/border"
             android:text="@string/taxi"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/bBus"
             app:layout_constraintStart_toStartOf="parent"
@@ -196,7 +201,7 @@
             android:layout_marginEnd="10dp"
             android:background="@drawable/border"
             android:text="@string/bus"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/bDespensa"
             app:layout_constraintStart_toEndOf="@id/bTaxi"
@@ -210,7 +215,7 @@
             android:layout_marginEnd="10dp"
             android:background="@drawable/border"
             android:text="@string/Delivery"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/bBus"

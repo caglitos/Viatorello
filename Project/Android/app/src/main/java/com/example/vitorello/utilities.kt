@@ -15,6 +15,9 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import org.json.JSONObject
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.Marker
 
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -52,11 +55,13 @@ fun postRequest(url: String, jsonBody: String, callback: (String?, Exception?) -
     })
 }
 
-fun getRequest(url: String, callback: (String?, Exception?) -> Unit) {
+fun getRequest(url: String, jsonBody: String, callback: (String?, Exception?) -> Unit) {
     val client = OkHttpClient()
+    val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
+    val requestBody = jsonBody.toRequestBody(mediaType)
     val request = Request.Builder()
         .url(url)
-        .get()
+        .method("GET", requestBody)
         .build()
 
     client.newCall(request).enqueue(object : Callback {
@@ -132,6 +137,7 @@ fun isoDate(): String {
     return dateFormat.format(Date())
 }
 
+// Obtener lka localizacion actual como un punto GeoJSON
 @SuppressLint("MissingPermission")
 suspend fun getCurrentLocationAsGeoJsonPoint(context: Context): String = suspendCoroutine { cont ->
     val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
@@ -174,15 +180,17 @@ suspend fun getCurrentLocationAsGeoJsonPoint(context: Context): String = suspend
 }
 
 // Guardar token
-fun saveAuthToken(context: Context, res: String?) {
+fun saveAuth(context: Context, res: String?) {
     try {
         val json = JSONObject(res ?: "")
         val token = json.optString("token", null)
+        val userId = json.optString("id", null)
         if (token != null) {
             val sharedPref = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
 
             with(sharedPref.edit()) {
                 putString("auth_token", token)
+                putString("userId", userId)
                 putBoolean("is_logged_in", true)
                 apply()
             }
@@ -202,10 +210,10 @@ fun getAuthToken(context: Context): String? {
     return sharedPref.getString("auth_token", null)
 }
 
-// Verificar si está logueado
-fun isLoggedIn(context: Context): Boolean {
+// Obtener userId
+fun getUserId(context: Context): String? {
     val sharedPref = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
-    return sharedPref.getBoolean("is_logged_in", false)
+    return sharedPref.getString("userId", null)
 }
 
 // Logout (limpiar datos)
@@ -216,4 +224,26 @@ fun logout(context: Context) {
         putBoolean("is_logged_in", false)
         apply()
     }
+}
+
+
+fun center(map: MapView, coordinates: String) {
+    val json = JSONObject(coordinates)
+    val coordinates = json.getJSONArray("coordinates")
+    val currentLocation = GeoPoint(coordinates.getDouble(1), coordinates.getDouble(0))
+    map.controller.setZoom(18.0)
+    map.controller.setCenter(currentLocation)
+}
+
+fun createPoint(map: MapView, icon: android.graphics.drawable.Drawable, coordinates: String) {
+    val json = JSONObject(coordinates)
+    val coordinates = json.getJSONArray("coordinates")
+    val currentLocation = GeoPoint(coordinates.getDouble(1), coordinates.getDouble(0))
+
+    val userMarker = Marker(map)
+    userMarker.position = currentLocation
+    userMarker.icon = icon
+    userMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+
+    map.overlays.add(userMarker)
 }

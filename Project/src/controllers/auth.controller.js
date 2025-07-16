@@ -1,5 +1,4 @@
 import bcrypt from "bcryptjs";
-import mongoose from "mongoose";
 import User from "../models/user.model.js";
 import { createAccesToken } from "../libs/jwt.js";
 
@@ -16,9 +15,7 @@ import { createAccesToken } from "../libs/jwt.js";
  * Each function interacts with the User model and handles JWT token creation for session management.
  */
 
-/**
- * This function generates a new user and saves it to the database.
- */
+//This function generates a new user and saves it to the database.
 export const register = async (req, res) => {
   console.log(req.body);
 
@@ -44,10 +41,14 @@ export const register = async (req, res) => {
         type: "Point",
         coordinates: [0, 0],
       },
-      isOnline: isOnline || false,
       lastLocationUpdate: lastLocationUpdate || null,
-      currentTrip: currentTrip || null,
     });
+
+    if (isOnline !== undefined) newUser.isOnline = isOnline;
+    else newUser.isOnline = false;
+
+    if (currentTrip !== undefined) newUser.currentTrip = currentTrip;
+    else newUser.currentTrip = null;
 
     const userSaved = await newUser.save();
     const token = await createAccesToken({ id: userSaved._id });
@@ -71,9 +72,7 @@ export const register = async (req, res) => {
   }
 };
 
-/**
- * This function logs in a user by verifying their credentials and updating their session information.
- */
+// This function logs in a user by verifying their credentials and updating their session information.
 export const login = async (req, res) => {
   const {
     email,
@@ -134,17 +133,13 @@ export const login = async (req, res) => {
   }
 };
 
-/**
- * This function logs out a user by clearing their session token.
- */
+// This function logs out a user by clearing their session token.
 export const logout = (req, res) => {
   res.cookie("token", "", { expires: new Date(0) });
   return res.sendStatus(200);
 };
 
-/**
- * This function retrieves the profile of the currently authenticated user.
- */
+// This function retrieves the profile of the currently authenticated user.
 export const profile = async (req, res) => {
   const userFound = await User.findById(req.user.id);
 

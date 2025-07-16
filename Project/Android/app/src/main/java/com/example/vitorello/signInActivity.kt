@@ -42,6 +42,7 @@ class signInActivity : AppCompatActivity() {
             logIn()
         }
 
+
     }
 
     private fun initRegisterText() {
@@ -78,8 +79,8 @@ class signInActivity : AppCompatActivity() {
                 }
             """.trimIndent()
 
-            
-            postRequest("http://10.0.2.2:3000/api/login", json) { res, error ->
+            postRequest("https://viatorello-production.up.railway.app/api/login", json) { res, error ->
+//            postRequest("http://10.0.2.2:3000/api/login", json) { res, error ->
                 runOnUiThread {
                     if (error != null) {
                         Log.d("SignIn", "logIn: Error $error")
@@ -114,7 +115,7 @@ class signInActivity : AppCompatActivity() {
 
         startActivity(Intent(this, MainActivity::class.java))
 
-        saveAuthToken(this, res)
+        saveAuth(this, res)
     }
 
     private fun registerError() {

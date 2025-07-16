@@ -1,5 +1,6 @@
 package com.example.vitorello
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -10,6 +11,7 @@ import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
+import org.json.JSONObject
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
@@ -17,12 +19,10 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 
 class MainActivity : AppCompatActivity() {
-    
+    private val TAG = "MainActivity"
     private lateinit var mapView: MapView
     private val taxiMarkers = mutableListOf<Marker>()
     
-    // Ubicación del usuario (Buenos Aires por defecto)
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,16 +32,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initComponets() {
-        initMap()
-        initBotMenu()
-        initDestino()
-        val ajustes = findViewById<AppCompatImageView>(R.id.ivMenu)
+//        initBotMenu()
+//        initDestino()
+        initAjustes()
 
-        ajustes.setOnClickListener{
-            startActivity(Intent(this, TerminosActivity::class.java))
+        lifecycleScope.launch {
+            initMap()
         }
 
     }
+
+        fun initAjustes() {
+            val ajustes = findViewById<AppCompatImageView>(R.id.ivMenu)
+
+            ajustes.setOnClickListener {
+                startActivity(Intent(this, TerminosActivity::class.java))
+            }
+        }
 
     private fun initDestino() {
         val cargarDestino: ConstraintLayout = findViewById(R.id.clChofer)
@@ -70,27 +77,25 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initMap() {
-        Log.d("MainActivity", "initMap: Inicializando OSMDroid...")
-        
-        // Configurar OSMDroid
+    private suspend fun initMap() {
         Configuration.getInstance().load(this, getSharedPreferences("osmdroid", 0))
-        
-        // Obtener referencia al MapView
+
+        val geoJson = getCurrentLocationAsGeoJsonPoint(this@MainActivity)
+
         mapView = findViewById(R.id.mapa)
-        
-        // Configurar el mapa
+
         mapView.setTileSource(TileSourceFactory.MAPNIK)
         mapView.setMultiTouchControls(true)
         
-        // Centrar en Buenos Aires
-        val buenosAires = GeoPoint(-34.6037, -58.3816)
-        mapView.controller.setZoom(12.0)
-        mapView.controller.setCenter(buenosAires)
-        
-        // Iniciar fetch de taxis en tiempo real
+        // Centrar en la Ubicacion Actual
+        center(mapView, geoJson)
 
+        // Punto del usuario
+        createPoint(mapView, resources.getDrawable(R.drawable.location, null), geoJson)
 
         Log.d("MainActivity", "initMap: OSMDroid configurado exitosamente")
     }
+
+
+
 }
