@@ -95,7 +95,7 @@ class RegisterActivity : AppCompatActivity() {
                     runOnUiThread {
                         if (error != null) {
                             Log.d(TAG, "logIn: Error $error")
-//                        registerError()
+                            registerError()
                         } else {
                             registeredSuccessful(res)
                         }
@@ -109,14 +109,6 @@ class RegisterActivity : AppCompatActivity() {
 
 
     private fun registeredSuccessful(res: String?) {
-        Log.d(TAG, "registeredSuccessful: $res")
-        saveAuth(this, res)
-        startActivity(Intent(this, MainActivity::class.java))
-        finish()
-    }
-
-    private fun registerError(res: String?) {
-        Log.d(TAG, "registerError: Error during registration")
         val logInButton: Button = findViewById(R.id.registerButton)
         val buttonMsg: TextView = findViewById(R.id.buttonMsg)
 
@@ -130,6 +122,19 @@ class RegisterActivity : AppCompatActivity() {
         startActivity(Intent(this, MainActivity::class.java))
 
         saveAuth(this, res)
+    }
+
+    private fun registerError() {
+        val logInButton: Button = findViewById(R.id.registerButton)
+        val buttonMsg: TextView = findViewById(R.id.buttonMsg)
+
+        buttonMsg.text = getString(R.string.LogInError)
+
+        ViewCompat.setBackgroundTintList(
+            logInButton,
+            ContextCompat.getColorStateList(this, R.color.red)
+        )
+        logInButton.setTextColor(ContextCompat.getColor(this, R.color.white))
     }
 
     private fun confirmPasword(): Any {

@@ -74,6 +74,7 @@
                 android:layout_marginTop="8dp"
                 android:background="@drawable/border_gray"
                 android:hint="@string/name"
+                android:inputType="textPersonName"
                 android:paddingStart="16dp"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -109,6 +110,7 @@
                 android:layout_marginTop="8dp"
                 android:background="@drawable/border_gray"
                 android:hint="@string/email"
+                android:inputType="textEmailAddress"
                 android:paddingStart="16dp"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -144,11 +146,23 @@
                 android:layout_marginTop="8dp"
                 android:background="@drawable/border_gray"
                 android:hint="@string/password"
+                android:inputType="textPassword"
                 android:paddingLeft="16dp"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/passwordLabel" />
+
+            <ImageButton
+                android:id="@+id/pwdVisibility"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@null"
+                android:backgroundTint="@color/black"
+                android:src="@drawable/pwdtoggle0"
+                app:layout_constraintBottom_toBottomOf="@id/passwordInput"
+                app:layout_constraintEnd_toEndOf="@id/passwordInput"
+                app:layout_constraintTop_toTopOf="@id/passwordInput" />
 
             <TextView
                 android:id="@+id/passwordMsg"
@@ -173,6 +187,9 @@
                 app:layout_constraintStart_toStartOf="@id/passwordConfirmInput"
                 app:layout_constraintTop_toBottomOf="@id/passwordInput" />
 
+
+
+
             <EditText
                 android:id="@+id/passwordConfirmInput"
                 android:layout_width="279dp"
@@ -180,6 +197,7 @@
                 android:layout_marginTop="8dp"
                 android:background="@drawable/border_gray"
                 android:hint="@string/confirmPassword"
+                android:inputType="textPassword"
                 android:paddingLeft="16dp"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
