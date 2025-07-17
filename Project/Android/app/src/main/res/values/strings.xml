@@ -7,7 +7,7 @@
     <string name="time">Tiempo:</string>
     <string name="pets">Mascotas:</string>
     <string name="car">Auto:</string>
-    <string name="LogIn">Inicia Sesion</string>
+    <string name="LogIn"><u>Inicia Sesion</u></string>
     <string name="email">Correo Electronico</string>
     <string name="password">Contraseña</string>
     <string name="register"><u>Registrate</u></string>
