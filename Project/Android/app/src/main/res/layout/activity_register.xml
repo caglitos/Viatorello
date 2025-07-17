@@ -194,7 +194,7 @@
         app:layout_constraintTop_toBottomOf="@id/forgotPassword" />
 
     <Button
-        android:id="@+id/logInButton"
+        android:id="@+id/registerButton"
         android:layout_width="185dp"
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
@@ -215,7 +215,7 @@
         android:textColor="@color/red"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/logInButton"
+        app:layout_constraintTop_toBottomOf="@id/registerButton"
         tools:text="Error" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

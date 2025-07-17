@@ -1,18 +1,14 @@
 package com.example.vitorello
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.Html
 import android.util.Log
-import android.view.View
 import android.view.WindowManager
-
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -63,7 +59,7 @@ class signInActivity : AppCompatActivity() {
     }
 
     private suspend fun logIn() {
-        val logInButton: Button = findViewById(R.id.logInButton)
+        val logInButton: Button = findViewById(R.id.registerButton)
         val geoJson = getCurrentLocationAsGeoJsonPoint(this@signInActivity)
 
         logInButton.setOnClickListener {
@@ -79,7 +75,10 @@ class signInActivity : AppCompatActivity() {
                 }
             """.trimIndent()
 
-            postRequest("https://viatorello-production.up.railway.app/api/login", json) { res, error ->
+            postRequest(
+                "https://viatorello-production.up.railway.app/api/login",
+                json
+            ) { res, error ->
 //            postRequest("http://10.0.2.2:3000/api/login", json) { res, error ->
                 runOnUiThread {
                     if (error != null) {
@@ -103,7 +102,7 @@ class signInActivity : AppCompatActivity() {
     }
 
     private fun registeredSuccessful(res: String?) {
-        val logInButton: Button = findViewById(R.id.logInButton)
+        val logInButton: Button = findViewById(R.id.registerButton)
         val buttonMsg: TextView = findViewById(R.id.buttonMsg)
 
         buttonMsg.text = getString(R.string.LogInSucces)
@@ -119,9 +118,11 @@ class signInActivity : AppCompatActivity() {
     }
 
     private fun registerError() {
-        val logInButton: Button = findViewById(R.id.logInButton)
+        val logInButton: Button = findViewById(R.id.registerButton)
         val buttonMsg: TextView = findViewById(R.id.buttonMsg)
+
         buttonMsg.text = getString(R.string.LogInError)
+
         ViewCompat.setBackgroundTintList(
             logInButton,
             ContextCompat.getColorStateList(this, R.color.red)

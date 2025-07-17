@@ -1,6 +1,5 @@
 package com.example.vitorello
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -10,19 +9,13 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.delay
-import org.json.JSONObject
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
-import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
-import org.osmdroid.views.overlay.Marker
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
     private lateinit var mapView: MapView
-    private val taxiMarkers = mutableListOf<Marker>()
-    
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,23 +25,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initComponets() {
-//        initBotMenu()
-//        initDestino()
+        initBotMenu()
+        initDestino()
         initAjustes()
 
-        lifecycleScope.launch {
-            initMap()
-        }
+        lifecycleScope.launch{initMap()}
 
     }
 
-        fun initAjustes() {
-            val ajustes = findViewById<AppCompatImageView>(R.id.ivMenu)
+    private fun initAjustes() {
+        val ajustes = findViewById<AppCompatImageView>(R.id.ivMenu)
 
-            ajustes.setOnClickListener {
-                startActivity(Intent(this, TerminosActivity::class.java))
-            }
+        ajustes.setOnClickListener {
+            startActivity(Intent(this, TerminosActivity::class.java))
         }
+    }
 
     private fun initDestino() {
         val cargarDestino: ConstraintLayout = findViewById(R.id.clChofer)

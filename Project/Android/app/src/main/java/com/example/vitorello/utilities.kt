@@ -2,11 +2,10 @@ package com.example.vitorello
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.location.Location
 import android.util.Log
-
 import com.google.android.gms.location.LocationServices
-
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -18,7 +17,6 @@ import org.json.JSONObject
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
-
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -26,7 +24,9 @@ import java.util.Locale
 import java.util.TimeZone
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import androidx.core.content.edit
 
+// Realizar una solicitudes HTTP
 fun postRequest(url: String, jsonBody: String, callback: (String?, Exception?) -> Unit) {
     val client = OkHttpClient()
 
@@ -131,13 +131,14 @@ fun deleteRequest(url: String, callback: (String?, Exception?) -> Unit) {
     })
 }
 
+// Obtener la fecha y hora actual en formato ISO 8601
 fun isoDate(): String {
     val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
     dateFormat.timeZone = TimeZone.getTimeZone("UTC")
     return dateFormat.format(Date())
 }
 
-// Obtener lka localizacion actual como un punto GeoJSON
+// Obtener la localizacion actual como un punto GeoJSON
 @SuppressLint("MissingPermission")
 suspend fun getCurrentLocationAsGeoJsonPoint(context: Context): String = suspendCoroutine { cont ->
     val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
@@ -188,11 +189,10 @@ fun saveAuth(context: Context, res: String?) {
         if (token != null) {
             val sharedPref = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
 
-            with(sharedPref.edit()) {
+            sharedPref.edit{
                 putString("auth_token", token)
                 putString("userId", userId)
                 putBoolean("is_logged_in", true)
-                apply()
             }
 
             Log.d("LogIn", "LogInSuccessful: $token")
@@ -219,14 +219,14 @@ fun getUserId(context: Context): String? {
 // Logout (limpiar datos)
 fun logout(context: Context) {
     val sharedPref = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
-    with(sharedPref.edit()) {
+    sharedPref.edit{
         remove("auth_token")
         putBoolean("is_logged_in", false)
         apply()
     }
 }
 
-
+// Centrar el mapa en una ubicación específica
 fun center(map: MapView, coordinates: String) {
     val json = JSONObject(coordinates)
     val coordinates = json.getJSONArray("coordinates")
@@ -235,7 +235,8 @@ fun center(map: MapView, coordinates: String) {
     map.controller.setCenter(currentLocation)
 }
 
-fun createPoint(map: MapView, icon: android.graphics.drawable.Drawable, coordinates: String) {
+// Crear un punto en el mapa con un icono y coordenadas específicas
+fun createPoint(map: MapView, icon: Drawable, coordinates: String) {
     val json = JSONObject(coordinates)
     val coordinates = json.getJSONArray("coordinates")
     val currentLocation = GeoPoint(coordinates.getDouble(1), coordinates.getDouble(0))

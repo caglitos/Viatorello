@@ -41,4 +41,13 @@
     <string name="LogInError">Error al iniciar secion</string>
     <string name="LogInSucces">Inicion sesada</string>
     <string name="confirmPassword">Confirmar contraseña</string>
+    <string name="pwdLenght">Password must be at least 8 characters long</string>
+    <string name="pwdUpperLower">Password must contain both uppercase and lowercase letters</string>
+    <string name="pwdDigit">Password must contain at least one digit</string>
+    <string name="pwdSpecialChar">Password must contain at least one special character</string>
+    <string name="pwdNoWhitespace">Password cannot contain whitespace</string>
+    <string name="pwdOnlyDigits">Password cannot be only digits</string>
+    <string name="pwdOnlyLetters">Password cannot be only letters</string>
+    <string name="pwdValid">La contraseña funciona</string>
+    <string name="pwdInvalid">La contraseña no funciona :(</string>
 </resources>

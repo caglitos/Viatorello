@@ -43,4 +43,13 @@
     <string name="LogInError">Error al iniciar sesión</string>
     <string name="LogInSucces">Inicion sesada</string>
     <string name="confirmPassword">Confirmar contraseña</string>
+    <string name="pwdLenght">La contraseña debe tener al menos 8 caracteres</string>
+    <string name="pwdUpperLower">La contraseña debe tenr mayusculas y minusculas</string>
+    <string name="pwdDigit">La contraseña debe tenre al menos un numero</string>
+    <string name="pwdSpecialChar">La contraseña debe tener un caracter especial</string>
+    <string name="pwdNoWhitespace">La contraseña no debe tener espacios</string>
+    <string name="pwdOnlyDigits">La contraseña no puede ser solo digitos</string>
+    <string name="pwdOnlyLetters">La contraseña no puede ser solo letras</string>
+    <string name="pwdValid">La contraseña funciona</string>
+    <string name="pwdInvalid">La contraseña no funciona :(</string>
 </resources>
