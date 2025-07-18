@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -22,9 +23,9 @@ class RegisterActivity : AppCompatActivity() {
 
         window.navigationBarColor = android.graphics.Color.TRANSPARENT
         window.decorView.systemUiVisibility = (
-            View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-            or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-        )
+                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                )
 
         setContentView(R.layout.activity_register)
 
@@ -36,12 +37,14 @@ class RegisterActivity : AppCompatActivity() {
 //        isAuth()
         initLoginText()
         formatHtml()
+        togglePwdVisibility()
 
         lifecycleScope.launch {
             initRegisterFetch()
         }
     }
 
+    // Initialize the text for navigating to the login screen
     private fun initLoginText() {
         val logInText: TextView = findViewById(R.id.LogIN)
 
@@ -71,21 +74,14 @@ class RegisterActivity : AppCompatActivity() {
             if (confirmpwd is Int)
                 pwdMsg.text = getString(confirmpwd)
 
-
             if (confirmpwd is Boolean && confirmpwd) {
                 pwdMsg.text = getString(R.string.pwdValid)
 
-                val json = """
-                    {
-                        "username": "${newUser()[0]}",
-                        "email": "${newUser()[1]}",
-                        "password": "${newUser()[2]}",
+                val json = """{${newUser()},
                         "currentLocation": $geoJson,
                         "isOnline": true,
                         "lastLocationUpdate": "${isoDate()}",
-                        "currentTrip": false
-                    }
-                """.trimIndent()
+                        "currentTrip": false} """.trimIndent()
 
                 postRequest(
                     "https://viatorello-production.up.railway.app/api/register",
@@ -101,13 +97,14 @@ class RegisterActivity : AppCompatActivity() {
                         }
                     }
                 }
-            } else {
+            } else if(confirmpwd is Boolean) {
                 pwdMsg.text = getString(R.string.pwdInvalid)
             }
+
         }
     }
 
-
+    // Show a success message when registration is successful2w
     private fun registeredSuccessful(res: String?) {
         val logInButton: Button = findViewById(R.id.registerButton)
         val buttonMsg: TextView = findViewById(R.id.buttonMsg)
@@ -124,6 +121,7 @@ class RegisterActivity : AppCompatActivity() {
         saveAuth(this, res)
     }
 
+    // Show an error message when registration fails
     private fun registerError() {
         val logInButton: Button = findViewById(R.id.registerButton)
         val buttonMsg: TextView = findViewById(R.id.buttonMsg)
@@ -137,6 +135,28 @@ class RegisterActivity : AppCompatActivity() {
         logInButton.setTextColor(ContextCompat.getColor(this, R.color.white))
     }
 
+    // Toggle password visibility
+    private fun togglePwdVisibility() {
+        val pwdVisibilityToggle: ImageButton = findViewById(R.id.pwdVisibility)
+        val password: EditText = findViewById(R.id.passwordInput)
+        val confirmPassword: EditText = findViewById(R.id.passwordConfirmInput)
+
+        pwdVisibilityToggle.setOnClickListener {
+            if (password.inputType == 129) {
+                password.inputType = 144
+                confirmPassword.inputType = 144
+                pwdVisibilityToggle.setImageResource(R.drawable.pwdtoggle1)
+            } else {
+                password.inputType = 129
+                confirmPassword.inputType = 129
+                pwdVisibilityToggle.setImageResource(R.drawable.pwdtoggle0)
+            }
+            password.setSelection(password.text.length)
+            confirmPassword.setSelection(confirmPassword.text.length)
+        }
+    }
+
+    // Validate the password and confirm password fields
     private fun confirmPasword(): Any {
         val password: EditText = findViewById(R.id.passwordInput)
         val confirmPassword: EditText = findViewById(R.id.passwordConfirmInput)
@@ -173,6 +193,7 @@ class RegisterActivity : AppCompatActivity() {
         return true
     }
 
+    // Check if the user is already authenticated
     private fun isAuth() {
         val token = getAuthToken(this)
 
@@ -182,11 +203,15 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun newUser(): Array<String> {
+    private fun newUser(): String {
         val username: EditText = findViewById(R.id.userNameInput)
         val email: EditText = findViewById(R.id.emailInput)
         val password: EditText = findViewById(R.id.passwordInput)
 
-        return arrayOf(username.text.toString(), email.text.toString(), password.text.toString())
+        return """
+            "username": "${username.text}",
+            "email": "${email.text}",
+            "password": "${password.text}"
+        """.trimIndent()
     }
 }

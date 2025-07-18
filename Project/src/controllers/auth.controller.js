@@ -18,7 +18,6 @@ import { createAccesToken } from "../libs/jwt.js";
 //This function generates a new user and saves it to the database.
 export const register = async (req, res) => {
   console.log(req.body);
-
   const {
     username,
     email,

@@ -136,7 +136,7 @@ class signInActivity : AppCompatActivity() {
         logInButton.setTextColor(ContextCompat.getColor(this, R.color.white))
     }
 
-    private fun signInActivity.togglePwdVisibility() {
+    private fun togglePwdVisibility() {
         val pwdVisibilityTogle: ImageButton = findViewById(R.id.pwdVisibility)
 
         pwdVisibilityTogle.setOnClickListener {

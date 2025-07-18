@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="MongoDBSettings">
+    <option name="serverConnections">
+      <set>
+        <ServerConnectionSetting>
+          <option name="authenticationMethod" value="NONE" />
+          <option name="name" value="local" />
+          <option name="serverUrls">
+            <list>
+              <option value="localhost:27017" />
+            </list>
+          </option>
+          <option name="sshTunnelingConfiguration">
+            <SshTunnelingConfiguration />
+          </option>
+          <option name="tlsSslConnection" value="DEFAULT" />
+          <option name="uuid" value="389ac89f-9961-4865-b03c-6685f0dfe004" />
+        </ServerConnectionSetting>
+        <ServerConnectionSetting>
+          <option name="authenticationMethod" value="NONE" />
+          <option name="name" value="vitorello" />
+          <option name="serverUrls">
+            <list>
+              <option value="c4rlosruiz01:j8y5hjtjVl699@cluster0.sbgomga.mongodb.net/?retryWrites=true&amp;w=majority&amp;appName=Cluster0" />
+            </list>
+          </option>
+          <option name="sshTunnelingConfiguration">
+            <SshTunnelingConfiguration />
+          </option>
+          <option name="tlsSslConnection" value="DEFAULT" />
+          <option name="typeConnect" value="DNS_SEEDLIST" />
+          <option name="uuid" value="58d564ac-4381-442f-875e-014aac2e9008" />
+        </ServerConnectionSetting>
+      </set>
+    </option>
+  </component>
+</project>
