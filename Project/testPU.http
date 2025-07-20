@@ -1,0 +1,6 @@
+POST http://localhost:3000/api/driver/register
+Content-Type: multipart/form-data
+
+name=Carlos
+email=C4rlosRuiz01@gmail.com
+photo=@./../Design/persona.jpg

@@ -140,7 +140,7 @@ fun isoDate(): String {
 
 // Obtener la localizacion actual como un punto GeoJSON
 @SuppressLint("MissingPermission")
-suspend fun getCurrentLocationAsGeoJsonPoint(context: Context): String = suspendCoroutine { cont ->
+suspend fun getCurrentGeoJsonPoint(context: Context): String = suspendCoroutine { cont ->
     val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
     fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
         if (location != null) {

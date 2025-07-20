@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
     private suspend fun initMap() {
         Configuration.getInstance().load(this, getSharedPreferences("osmdroid", 0))
 
-        val geoJson = getCurrentLocationAsGeoJsonPoint(this@MainActivity)
+        val geoJson = getCurrentGeoJsonPoint(this@MainActivity)
 
         mapView = findViewById(R.id.mapa)
 

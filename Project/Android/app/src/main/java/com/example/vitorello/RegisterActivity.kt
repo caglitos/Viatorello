@@ -66,7 +66,7 @@ class RegisterActivity : AppCompatActivity() {
     private suspend fun initRegisterFetch() {
         val pwdMsg = findViewById<TextView>(R.id.passwordMsg)
         val registerBtn = findViewById<Button>(R.id.registerButton)
-        val geoJson = getCurrentLocationAsGeoJsonPoint(this@RegisterActivity)
+        val geoJson = getCurrentGeoJsonPoint(this@RegisterActivity)
 
         registerBtn.setOnClickListener {
             val confirmpwd = confirmPasword()

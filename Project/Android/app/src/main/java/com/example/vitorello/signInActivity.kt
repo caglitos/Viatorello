@@ -66,7 +66,7 @@ class signInActivity : AppCompatActivity() {
 
     private suspend fun logIn() {
         val logInButton: Button = findViewById(R.id.registerButton)
-        val geoJson = getCurrentLocationAsGeoJsonPoint(this@signInActivity)
+        val geoJson = getCurrentGeoJsonPoint(this@signInActivity)
 
         logInButton.setOnClickListener {
             val json = """

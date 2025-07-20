@@ -24,3 +24,10 @@ Android/gradle.properties
 
 # Otros archivos comunes
 .DS_Store
+
+# Ignorar archivos de configuración de IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iw

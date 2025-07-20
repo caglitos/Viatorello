@@ -4,9 +4,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/index.js",
-    "production": "node src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon main/src/index.js",
+    "production": "node main/src/index.js",
+    "testPU": "nodemon test/photoUpLoadTest/src/index.js"
   },
   "author": "",
   "license": "ISC",
