@@ -20,7 +20,11 @@ export const registerDriver = async (req, res) => {
 
         await newDriver.save();
         res.status(201).json({ message: "Conductor registrado con foto", driver: newDriver });
+        console.log("BODY:", req.body);
+        console.log("FILE:", req.file);
     } catch (error) {
         res.status(500).json({ message: "Error registrando conductor", error: error.message });
+        console.log("BODY:", req.body);
+        console.log("FILE:", req.file);
     }
 };

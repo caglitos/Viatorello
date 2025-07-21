@@ -1,5 +1,3 @@
-import { z } from "zod";
-
 // src/middlewares/validator.middleware.js
 export const validateSchema = (schema) => (req, res, next) => {
   try {

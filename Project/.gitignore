@@ -19,6 +19,7 @@ yarn.lock
 
 # Ignorar archivos de entorno
 .env
+*.env
 .env.*
 Android/gradle.properties
 
