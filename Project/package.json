@@ -4,8 +4,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon main/src/index.js",
-    "production": "node main/src/index.js",
+    "dev": "nodemon src/index.js",
+    "production": "node src/index.js",
     "testPU": "nodemon test/photoUpLoadTest/src/index.js"
   },
   "author": "",

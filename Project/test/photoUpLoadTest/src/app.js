@@ -1,17 +1,8 @@
-import express, { Router } from "express";
-import multer from "multer";
-import { registerDriver } from "./controller/driver.controller.js";
-
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
-
-const router = Router();
-
-// Solo esta ruta usa Multer:
-router.post("/register", upload.single("photo"), registerDriver);
+import express from "express";
+import driverRoutes from "./routes/driver.routes.js";
 
 const app = express();
 
-app.use(router)
+app.use(driverRoutes)
 
 export default app;
