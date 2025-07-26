@@ -22,7 +22,7 @@ export const registerDriver = async (req, res) => {
 
         const newDriver = new Driver({
             name,
-            email,
+            email: email.toLowerCase().trim(),
             photo,
         });
 
@@ -36,6 +36,7 @@ export const registerDriver = async (req, res) => {
 };
 
 export const loginDriver = async (req, res) => {
+    console.log("BODY:", req);
     const { email } = req.body;
     try {
         const driverFound = await Driver.findOne({email: email.toLowerCase().trim()});

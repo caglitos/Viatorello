@@ -5,11 +5,12 @@ plugins {
 
 android {
     namespace = "com.example.vitorello"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.vitorello"
         minSdk = 24
+        //noinspection OldTargetApi
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -46,14 +47,15 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     // OSMDroid para mapas gratuitos
-    implementation("org.osmdroid:osmdroid-android:6.1.18")
+    implementation(libs.osmdroid.android)
     
     // Networking para APIs
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+    implementation(libs.retrofit)
+    //noinspection UseTomlInstead
+    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
+    implementation(libs.logging.interceptor)
     
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.0")
+    implementation(libs.kotlin.stdlib)
     implementation(libs.androidx.annotation)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)

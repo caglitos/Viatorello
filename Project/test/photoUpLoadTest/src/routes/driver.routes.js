@@ -1,4 +1,4 @@
-import {Router} from "express";
+import express, {Router} from "express";
 import multer from "multer";
 import {getDriverPhoto, loginDriver, registerDriver} from "../controller/driver.controller.js";
 
@@ -9,7 +9,7 @@ const download = multer({storage: multer.memoryStorage()}); // Para descargar fo
 const router = Router();
 
 router.post("/register", upload.single("photo"), registerDriver);
-router.post("/login", download.single("photo"), loginDriver);
+router.post("/login", express.json(), loginDriver);
 router.get("/photo", download.single("photo"), getDriverPhoto); // Para obtener la foto del conductor
 
 export default router;

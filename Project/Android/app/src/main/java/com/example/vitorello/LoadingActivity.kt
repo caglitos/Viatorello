@@ -11,6 +11,7 @@ class LoadingActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_loading)
 
+
         startActivity(Intent(this, signInActivity::class.java))
 
     }
