@@ -1,4 +1,4 @@
-POST http://localhost:3000/register
+POST http://localhost:3000/api/driver/register
 
 name=Carlos
 email=C4rlosRuiz01@gmail.com

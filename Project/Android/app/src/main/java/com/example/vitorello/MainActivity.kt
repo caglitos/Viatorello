@@ -29,7 +29,6 @@ class MainActivity : AppCompatActivity() {
         initAjustes()
 
         lifecycleScope.launch{initMap()}
-
     }
 
     private fun initAjustes() {
@@ -85,7 +84,4 @@ class MainActivity : AppCompatActivity() {
 
         Log.d("MainActivity", "initMap: OSMDroid configurado exitosamente")
     }
-
-
-
 }

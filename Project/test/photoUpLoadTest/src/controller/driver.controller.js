@@ -6,11 +6,17 @@ export const registerDriver = async (req, res) => {
 
     // Solo sigue si req.body existe y tiene datos
     if (!req.body) {
-        return res.status(400).json({ message: "Body vacío o mal formado", error: "req.body está undefined" });
+        return res.status(400).json({
+            message: "Body vacío o mal formado",
+            error: "req.body está undefined"
+        });
     }
 
     try {
-        const { name, email } = req.body;
+        const {
+            name,
+            email
+        } = req.body;
 
         let photo = undefined;
         if (req.file) {

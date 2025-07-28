@@ -9,7 +9,6 @@ import driverRoutes from "./routes/driver.routes.js";
 const app = express();
 
 app.use(morgan("dev"));
-app.use(express.json());
 app.use(cookieParser());
 
 // Permite peticiones desde el frontend en el puerto 5173
@@ -22,12 +21,13 @@ app.use(
       "http://10.0.2.2:8081", // Android emulator for Metro
       "http://localhost:46216",
       "http://10.0.2.2:46216",
+      "*",
     ],
     credentials: true,
   })
 );
 
-app.use("/api/auth", authRoutes);
+app.use("/api/auth", express.json(), authRoutes);
 app.use("/api/driver", driverRoutes);
 
 export default app;

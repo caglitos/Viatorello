@@ -80,19 +80,23 @@ export const loginSchema = z.object({
         .boolean()
         .default(false),
 
-    vehicle: vehicleSchema
-        .optional(),
-
-    documents: documentsSchema
-        .optional(),
-
     lastLocationUpdate: geoPointSchema.optional().default({
         type: "Point",
         coordinates: [0, 0],
     }),
+});
 
-    currentTrip: geoPointSchema.optional().default({
+export const updateLocationSchema = z.object({
+    email: z
+        .string({
+            required_error: "Email is required",
+        })
+        .email({
+            message: "Invalid email",
+        }).trim(),
+    currentLocation: geoPointSchema.optional().default({
         type: "Point",
         coordinates: [0, 0],
     }),
+    isOnline: z.boolean().default(false),
 });
