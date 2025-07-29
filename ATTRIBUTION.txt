@@ -1,0 +1,5 @@
+Este producto utiliza datos de OpenStreetMap, los cuales están disponibles bajo la licencia Open Database License (ODbL) de la OpenStreetMap Foundation (OSMF).
+
+© Colaboradores de OpenStreetMap  
+Licencia ODbL completa: https://opendatacommons.org/licenses/odbl/1-0/  
+Términos de uso de OSM: https://www.openstreetmap.org/copyright
