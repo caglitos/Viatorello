@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import User from "../models/user.model.js";
-import {createAccesToken} from "../libs/jwt.js";
+import { createAccesToken } from "../libs/jwt.js";
 
 /**
  * @file auth.controller.js
@@ -17,150 +17,150 @@ import {createAccesToken} from "../libs/jwt.js";
 
 //This function generates a new user and saves it to the database.
 export const register = async (req, res) => {
-    console.log(req.body);
-    const {
-        username,
-        email,
-        password,
-        currentLocation,
-        isOnline,
-        lastLocationUpdate,
-        currentTrip,
-    } = req.body;
+  console.log(req.body);
+  const {
+    username,
+    email,
+    password,
+    currentLocation,
+    isOnline,
+    lastLocationUpdate,
+    currentTrip,
+  } = req.body;
 
-    try {
-        const passwordHash = await bcrypt.hash(password, 10);
+  try {
+    const passwordHash = await bcrypt.hash(password, 10);
 
-        // Solo asigna los campos definidos en el modelo de Mongoose
-        const newUser = new User({
-            username: username.trim(),
-            email: email.toLowerCase().trim(),
-            password: passwordHash,
-            currentLocation: currentLocation || {
-                type: "Point",
-                coordinates: [0, 0],
-            },
-            lastLocationUpdate: lastLocationUpdate || null,
-        });
+    // Solo asigna los campos definidos en el modelo de Mongoose
+    const newUser = new User({
+      username: username.trim(),
+      email: email.toLowerCase().trim(),
+      password: passwordHash,
+      currentLocation: currentLocation || {
+        type: "Point",
+        coordinates: [0, 0],
+      },
+      lastLocationUpdate: lastLocationUpdate || null,
+    });
 
-        if (isOnline !== undefined) newUser.isOnline = isOnline;
-        else newUser.isOnline = false;
+    if (isOnline !== undefined) newUser.isOnline = isOnline;
+    else newUser.isOnline = false;
 
-        if (currentTrip !== undefined) newUser.currentTrip = currentTrip;
-        else newUser.currentTrip = null;
+    if (currentTrip !== undefined) newUser.currentTrip = currentTrip;
+    else newUser.currentTrip = null;
 
-        const userSaved = await newUser.save();
-        const token = await createAccesToken({id: userSaved._id});
+    const userSaved = await newUser.save();
+    const token = await createAccesToken({ id: userSaved._id });
 
-        res.cookie("token", token);
-        res.json({
-            id: userSaved._id,
-            username: userSaved.username,
-            email: userSaved.email,
-            createdAt: userSaved.createdAt,
-            updatedAt: userSaved.updatedAt,
-            currentLocation: userSaved.currentLocation,
-            isOnline: userSaved.isOnline,
-            lastLocationUpdate: userSaved.lastLocationUpdate,
-            currentTrip: userSaved.currentTrip,
-            token: token,
-        });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            message: "Internal Server Error",
-            error: error
-        });
-    }
+    res.cookie("token", token);
+    res.json({
+      id: userSaved._id,
+      username: userSaved.username,
+      email: userSaved.email,
+      createdAt: userSaved.createdAt,
+      updatedAt: userSaved.updatedAt,
+      currentLocation: userSaved.currentLocation,
+      isOnline: userSaved.isOnline,
+      lastLocationUpdate: userSaved.lastLocationUpdate,
+      currentTrip: userSaved.currentTrip,
+      token: token,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Internal Server Error",
+      error: error,
+    });
+  }
 };
 
 // This function logs in a user by verifying their credentials and updating their session information.
 export const login = async (req, res) => {
-    const {
-        email,
-        password,
-        currentLocation,
-        isOnline,
-        lastLocationUpdate,
-        currentTrip,
-    } = req.body;
+  const {
+    email,
+    password,
+    currentLocation,
+    isOnline,
+    lastLocationUpdate,
+    currentTrip,
+  } = req.body;
 
-    try {
-        const userFound = await User.findOne({email: email.toLowerCase().trim()});
+  try {
+    const userFound = await User.findOne({ email: email.toLowerCase().trim() });
 
-        if (!userFound) return res.status(404).json({message: "User not found"});
+    if (!userFound) return res.status(404).json({ message: "User not found" });
 
-        const isMatch = await bcrypt.compare(password, userFound.password);
+    const isMatch = await bcrypt.compare(password, userFound.password);
 
-        if (!isMatch)
-            return res.status(401).json({message: "Invalid credentials"});
+    if (!isMatch)
+      return res.status(401).json({ message: "Invalid credentials" });
 
-        userFound.isOnline = isOnline || userFound.isOnline;
-        userFound.currentLocation = currentLocation || userFound.currentLocation;
-        userFound.lastLocationUpdate =
-            lastLocationUpdate || userFound.lastLocationUpdate;
+    userFound.isOnline = isOnline || userFound.isOnline;
+    userFound.currentLocation = currentLocation || userFound.currentLocation;
+    userFound.lastLocationUpdate =
+      lastLocationUpdate || userFound.lastLocationUpdate;
 
-        // Manejar currentTrip - puede ser false, null, o un ObjectId válido
-        if (currentTrip !== undefined) {
-            userFound.currentTrip = currentTrip;
-        }
-
-        console.log("userFound before save:", {
-            currentTrip: userFound.currentTrip,
-            currentLocation: userFound.currentLocation,
-            isOnline: userFound.isOnline,
-        });
-        console.log("Request currentTrip:", currentTrip);
-
-        await userFound.save();
-
-        const token = await createAccesToken({id: userFound._id});
-
-        res.cookie("token", token);
-        res.json({
-            id: userFound._id,
-            username: userFound.username,
-            email: userFound.email,
-            createdAt: userFound.createdAt,
-            updatedAt: userFound.updatedAt,
-            currentLocation: userFound.currentLocation,
-            isOnline: userFound.isOnline,
-            lastLocationUpdate: userFound.lastLocationUpdate,
-            currentTrip: userFound.currentTrip,
-            token: token,
-        });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            message: "Internal Server Error",
-            error: error
-        });
+    // Manejar currentTrip - puede ser false, null, o un ObjectId válido
+    if (currentTrip !== undefined) {
+      userFound.currentTrip = currentTrip;
     }
+
+    console.log("userFound before save:", {
+      currentTrip: userFound.currentTrip,
+      currentLocation: userFound.currentLocation,
+      isOnline: userFound.isOnline,
+    });
+    console.log("Request currentTrip:", currentTrip);
+
+    await userFound.save();
+
+    const token = await createAccesToken({ id: userFound._id });
+
+    res.cookie("token", token);
+    res.json({
+      id: userFound._id,
+      username: userFound.username,
+      email: userFound.email,
+      createdAt: userFound.createdAt,
+      updatedAt: userFound.updatedAt,
+      currentLocation: userFound.currentLocation,
+      isOnline: userFound.isOnline,
+      lastLocationUpdate: userFound.lastLocationUpdate,
+      currentTrip: userFound.currentTrip,
+      token: token,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Internal Server Error",
+      error: error,
+    });
+  }
 };
 
 // This function logs out a user by clearing their session token.
 export const logout = (req, res) => {
-    res.cookie("token", "", {expires: new Date(0)});
-    return res.sendStatus(200);
+  res.cookie("token", "", { expires: new Date(0) });
+  return res.sendStatus(200);
 };
 
 // This function retrieves the profile of the currently authenticated user.
 export const profile = async (req, res) => {
-    const userFound = await User.findById(req.user.id);
+  const userFound = await User.findById(req.user.id);
 
-    if (!userFound) {
-        return res.status(400).json({ message: "User not found", });
-    }
+  if (!userFound) {
+    return res.status(400).json({ message: "User not found" });
+  }
 
-    return res.json({
-        id: userFound._id,
-        username: userFound.username,
-        email: userFound.email,
-        isOnline: userFound.isOnline,
-        currentLocation: userFound.currentLocation,
-        lastLocationUpdate: userFound.lastLocationUpdate,
-        currentTrip: userFound.currentTrip,
-        createdAt: userFound.createdAt,
-        updatedAt: userFound.updatedAt,
-    });
+  return res.json({
+    id: userFound._id,
+    username: userFound.username,
+    email: userFound.email,
+    isOnline: userFound.isOnline,
+    currentLocation: userFound.currentLocation,
+    lastLocationUpdate: userFound.lastLocationUpdate,
+    currentTrip: userFound.currentTrip,
+    createdAt: userFound.createdAt,
+    updatedAt: userFound.updatedAt,
+  });
 };

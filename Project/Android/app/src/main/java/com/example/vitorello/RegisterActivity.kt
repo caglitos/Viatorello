@@ -84,7 +84,7 @@ class RegisterActivity : AppCompatActivity() {
                         "currentTrip": false} """.trimIndent()
 
                 postRequest(
-                    "https://viatorello-production.up.railway.app/api/register",
+                    "https://viatorello-production.up.railway.app/api/auth/register",
                     json
                 ) { res, error ->
 //            postRequest("http://10.0.2.2:3000/api/Register", json) { res, error ->
@@ -97,7 +97,7 @@ class RegisterActivity : AppCompatActivity() {
                         }
                     }
                 }
-            } else if(confirmpwd is Boolean) {
+            } else if (confirmpwd is Boolean) {
                 pwdMsg.text = getString(R.string.pwdInvalid)
             }
 

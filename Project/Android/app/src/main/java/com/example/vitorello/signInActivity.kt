@@ -82,7 +82,7 @@ class signInActivity : AppCompatActivity() {
             """.trimIndent()
 
             postRequest(
-                "https://viatorello-production.up.railway.app/api/login",
+                "https://viatorello-production.up.railway.app/api/auth/login",
                 json
             ) { res, error ->
 //            postRequest("http://10.0.2.2:3000/api/login", json) { res, error ->
