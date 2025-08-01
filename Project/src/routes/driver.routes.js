@@ -27,7 +27,7 @@ console.log("[ROUTE] /api/driver/register route loaded");
 router.post(
   "/register",
   upload.single("photo"),
-  // validateSchema(driverSchema),
+  validateSchema(driverSchema),
   register
 );
 

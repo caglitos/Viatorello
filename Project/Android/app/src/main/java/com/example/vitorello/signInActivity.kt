@@ -85,7 +85,7 @@ class signInActivity : AppCompatActivity() {
                 "https://viatorello-production.up.railway.app/api/auth/login",
                 json
             ) { res, error ->
-//            postRequest("http://10.0.2.2:3000/api/login", json) { res, error ->
+//            postRequest("http://10.0.2.2:3000/api/auth/login", json) { res, error ->
                 runOnUiThread {
                     if (error != null) {
                         Log.d(TAG, "logIn: Error $error")
