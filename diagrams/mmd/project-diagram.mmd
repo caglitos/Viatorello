@@ -1,31 +1,122 @@
-graph LR
-    classDef activity fill:#b3e5fc,stroke:#0288d1,stroke-width:2px
-    classDef feature fill:#c8e6c9,stroke:#388e3c,stroke-width:2px
-    classDef dependency fill:#ffe0b2,stroke:#f57c00,stroke-width:2px
+graph TB
+    classDef android fill:#a5d6a7,stroke:#2e7d32,stroke-width:2px,color:#000
+    classDef backend fill:#ffccbc,stroke:#d84315,stroke-width:2px,color:#000
+    classDef database fill:#e1bee7,stroke:#7b1fa2,stroke-width:2px,color:#000
+    classDef api fill:#bbdefb,stroke:#1976d2,stroke-width:2px,color:#000
+    classDef external fill:#fff9c4,stroke:#f57f17,stroke-width:2px,color:#000
     
-    Loading((Loading)) --> Main((MainActivity))
+    %% Android Application Layer
+    subgraph AndroidApp ["📱 Android Application (Kotlin)"]
+        direction TB
+        MainActivity[MainActivity]
+        LoginActivity[LoginActivity]
+        BusActivity[BusActivity]
+        TaxiActivity[TaxiActivity]
+        DespensaActivity[DespensaActivity]
+        PagoActivity[PagoActivity]
+        TermsActivity[TermsActivity]
+        
+        MainActivity --> LoginActivity
+        MainActivity --> BusActivity
+        MainActivity --> TaxiActivity
+        MainActivity --> DespensaActivity
+        MainActivity --> PagoActivity
+        MainActivity --> TermsActivity
+    end
     
-    %% Activities
-    Main --> Bus((Bus))
-    Main --> Despensa((Despensa))
-    Main --> Taxi((TaxiDestino))
-    Main --> Pago((Pago))
-    Main --> Terms((Términos))
-    Main --> Login((Login))
+    %% Android Core Features
+    subgraph AndroidCore ["🔧 Android Core Features"]
+        direction TB
+        OSMDroid[OSMDroid Maps]
+        LocationServices[Location Services]
+        RetrofitAPI[Retrofit HTTP Client]
+        Navigation[Navigation Component]
+        MaterialDesign[Material Design]
+        ConstraintLayout[ConstraintLayout]
+    end
     
-    %% Features
-    Main --- Maps{Google Maps}
-    Main --- Loc{Location Services}
-    Main --- Nav{Navigation}
-    Pago --- Pay{Payment System}
+    %% Backend API Layer
+    subgraph BackendAPI ["🌐 Node.js Backend API"]
+        direction TB
+        ExpressApp[Express.js App]
+        AuthRoutes[Auth Routes]
+        DriverRoutes[Driver Routes]
+        AuthController[Auth Controller]
+        DriverController[Driver Controller]
+        JWTMiddleware[JWT Middleware]
+        ValidatorMiddleware[Validator Middleware]
+        
+        ExpressApp --> AuthRoutes
+        ExpressApp --> DriverRoutes
+        AuthRoutes --> AuthController
+        DriverRoutes --> DriverController
+        AuthController --> JWTMiddleware
+        DriverController --> ValidatorMiddleware
+    end
     
-    %% Core Dependencies
-    Main -.-> AndroidX[AndroidX]
-    Main -.-> Material[Material Design]
-    Maps -.-> GMaps[Maps SDK]
-    Main -.-> Layout[ConstraintLayout]
+    %% Data Models Layer
+    subgraph DataModels ["📊 Data Models & Schemas"]
+        direction TB
+        UserModel[User Model]
+        DriverModel[Driver Model]
+        AuthSchema[Auth Schema]
+        DriverSchema[Driver Schema]
+        
+        UserModel --> AuthSchema
+        DriverModel --> DriverSchema
+    end
     
-    %% Styling
-    class Loading,Main,Bus,Despensa,Taxi,Pago,Terms,Login activity
-    class Maps,Loc,Nav,Pay feature
-    class AndroidX,Material,GMaps,Layout dependency
+    %% Database Layer
+    subgraph DatabaseLayer ["🗄️ Database Layer"]
+        direction TB
+        MongoDB[(MongoDB)]
+        Mongoose[Mongoose ODM]
+        
+        Mongoose --> MongoDB
+    end
+    
+    %% External Services
+    subgraph ExternalServices ["🌍 External Services"]
+        direction TB
+        PaymentGateway[Payment Gateway]
+        MapServices[Map Services]
+        LocationAPI[Location API]
+    end
+    
+    %% Security & Auth
+    subgraph Security ["🔐 Security & Authentication"]
+        direction TB
+        JWT[JSON Web Tokens]
+        Bcrypt[Password Encryption]
+        CORS[CORS Policy]
+        CookieParser[Cookie Parser]
+    end
+    
+    %% Development Tools
+    subgraph DevTools ["🛠️ Development Tools"]
+        direction TB
+        Nodemon[Nodemon]
+        Morgan[Morgan Logger]
+        Multer[File Upload Handler]
+        Zod[Schema Validation]
+    end
+    
+    %% Connections between layers
+    AndroidApp --> AndroidCore
+    AndroidApp -.->|HTTP Requests| BackendAPI
+    AndroidCore -.->|Location| ExternalServices
+    AndroidCore -.->|Maps| ExternalServices
+    
+    BackendAPI --> DataModels
+    BackendAPI --> Security
+    BackendAPI --> DevTools
+    DataModels --> DatabaseLayer
+    
+    PagoActivity -.->|Payment Processing| ExternalServices
+    
+    %% Apply styles
+    class MainActivity,LoginActivity,BusActivity,TaxiActivity,DespensaActivity,PagoActivity,TermsActivity android
+    class ExpressApp,AuthRoutes,DriverRoutes,AuthController,DriverController,JWTMiddleware,ValidatorMiddleware backend
+    class MongoDB,Mongoose database
+    class OSMDroid,LocationServices,RetrofitAPI,Navigation,MaterialDesign,ConstraintLayout api
+    class PaymentGateway,MapServices,LocationAPI,JWT,Bcrypt,CORS,CookieParser,Nodemon,Morgan,Multer,Zod external
