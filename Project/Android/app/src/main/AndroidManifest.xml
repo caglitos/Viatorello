@@ -24,6 +24,7 @@
         <!-- Actividades -->
         <activity
             android:name=".RegisterActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,27 +33,31 @@
         </activity>
         <activity
             android:name=".TerminosActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".signInActivity"
+            android:screenOrientation="portrait"
             android:exported="true" />
         <activity
             android:name=".PagoActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".taxiDestinoActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".despensaActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".busActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true" />
-        <activity
-            android:name=".LoadingActivity"
+            android:screenOrientation="portrait"
             android:exported="true" />
     </application>
 
