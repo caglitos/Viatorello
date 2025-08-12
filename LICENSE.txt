@@ -19,23 +19,6 @@ limitations under the License.
 
 ------------------------------------------------------------------------------
 
-ADDITIONAL TERMS (clarification from the authors):
-
-The contents of this repository may not be copied, modified, distributed,
-or sold in part or in full as a standalone product. You are permitted to
-use or adapt this project only as part of a larger software product or
-service.
-
-Redistribution of individual files, assets, or modules from this repository
-is strictly prohibited unless they are integrated into a functioning and
-substantial software system.
-
-This clarification is intended to prevent misuse or unauthorized resale of
-isolated parts of the project. It does not modify the terms of the Apache
-License 2.0, which remains in full effect.
-
-------------------------------------------------------------------------------
-
                                  TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
 
 1. Definitions.

@@ -8,6 +8,9 @@ Android/build/
 Android/captures/
 Android/.externalNativeBuild/
 Android/.cxx
+Android/.idea/
+Android/.kotlin/
+Android/.vscode/
 
 # Ignorar archivos y carpetas de Node.js
 node_modules/
@@ -32,3 +35,6 @@ Android/gradle.properties
 *.iml
 *.ipr
 *.iw
+
+# Ignorar archivos de entrenamiento de IA
+src/ai-models/*
