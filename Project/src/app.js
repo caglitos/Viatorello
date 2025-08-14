@@ -50,9 +50,4 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/driver", driverRoutes);
 
-// Ruta de prueba
-app.get("/", (req, res) => {
-  res.json({ message: "Viatorello API funcionando correctamente! 🚀" });
-});
-
 export default app;

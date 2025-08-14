@@ -15,7 +15,7 @@
  */
 
 import bcrypt from "bcryptjs";
-import driver from "../models/driver.model.js";
+import Driver from "../models/driver.model.js";
 import {createAccesToken} from "../libs/jwt.js";
 
 // This function registers a new driver and saves it to the database.
@@ -81,7 +81,7 @@ export const register = async (req, res) => {
         const passwordHash = await bcrypt.hash(password, 10);
 
         // Only assign fields defined in the Mongoose model
-        const newDriver = new driver({
+        const newDriver = new Driver({
             fullName: fullName.trim(),
             email: email.toLowerCase().trim(),
             password: passwordHash,
@@ -106,8 +106,6 @@ export const register = async (req, res) => {
             id: driverSaved._id,
             fullName: driverSaved.fullName,
             email: driverSaved.email,
-            createdAt: driverSaved.createdAt,
-            updatedAt: driverSaved.updatedAt,
             currentTrip: driverSaved.currentTrip,
             currentLocation: driverSaved.currentLocation,
             isOnline: driverSaved.isOnline,
@@ -142,7 +140,7 @@ export const login = async (req, res) => {
     } = req.body;
 
     try {
-        const driverFound = await driver.findOne({
+        const driverFound = await Driver.findOne({
             email: email.toLowerCase().trim(),
         });
         if (!driverFound) {
@@ -206,26 +204,39 @@ export const nearby = async (req, res) => {
             latitude,
             longitude,
         } = req.body;
+        // Ejemplo dentro de tu bucle:
+        const overLap = 100; // Distancia de superposición entre anillos
+        var minDistance = 0;
+        var maxDistance = 500;
+        var drivers = [];
 
-        const drivers = await driver.find({
-            currentLocation: {
-                $near: {
-                    $geometry: {
-                        type: "Point",
-                        coordinates: [longitude, latitude],
-                    },
-                    $maxDistance: 200000 // Distancia máxima en METROS
-                }
-            },
-            isOnline: true
-        });
+        while (drivers.length === 0 && maxDistance <= 5000) { // Limita la búsqueda a un máximo de 5 km
+            drivers = await Driver.find({
+                currentLocation: {
+                    $near: {
+                        $geometry: {
+                            type: "Point",
+                            coordinates: [longitude, latitude],
+                        },
+                        $minDistance: minDistance,   // Distancia mínima
+                        $maxDistance: maxDistance    // Distancia máxima
+                    }
+                },
+                isOnline: true
+            });
+
+            if (drivers.length === 0) {
+                minDistance = maxDistance - overLap;    // El próximo anillo empieza donde terminó el anterior y da un rango por si un user cambio de posicion
+                maxDistance += 500;           // Incrementa la distancia máxima
+            }
+        }
 
         if (drivers.length === 0) {
             return res.status(404).json({message: "No drivers found nearby"});
         }
 
         return res.status(200).json({
-            msg: "Operación exitosa",
+            msg: `Succes, found ${drivers.length} drivers, in a radius of ${maxDistance} meters`,
             drivers: drivers.map(d => ({
                 driversId: d._id,
                 driverCoordinates: [d.currentLocation.coordinates[1], d.currentLocation.coordinates[0]], // [lat, lng]
@@ -242,7 +253,7 @@ export const nearby = async (req, res) => {
 export const profile = async (req, res) => {
     try {
         const driverId = req.user.id; // Assuming user ID is stored in req.user
-        const driverFound = await driver.findById(driverId);
+        const driverFound = await Driver.findById(driverId);
 
         if (!driverFound) {
             return res.status(404).json({message: "Driver not found"});
@@ -274,7 +285,7 @@ export const profile = async (req, res) => {
 export const getDriverPhoto = async (req, res) => {
     try {
         const driverId = req.user.id; // Assuming user ID is stored in req.user
-        const driverFound = await driver.findById(driverId);
+        const driverFound = await Driver.findById(driverId);
 
         if (!driverFound) {
             return res.status(404).json({message: "Driver not found"});
@@ -302,7 +313,7 @@ export const updateLocation = async (req, res) => {
 
     try {
         const driverId = req.user.id; // Assuming user ID is stored in req.user
-        const driverFound = await driver.findById(driverId);
+        const driverFound = await Driver.findById(driverId);
 
         if (!driverFound) {
             return res.status(404).json({message: "Driver not found"});

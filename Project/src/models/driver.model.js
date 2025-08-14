@@ -44,7 +44,7 @@ const driverSchema = new mongoose.Schema(
         default: "Point",
       },
       coordinates: {
-        type: [Number], // [longitude, latitude]
+        type: [mongoose.Schema.Types.Decimal128], // [longitude, latitude]
         required: true,
       },
     },
@@ -55,7 +55,7 @@ const driverSchema = new mongoose.Schema(
         default: "Point",
       },
       coordinates: {
-        type: [Number], // [longitude, latitude]
+          type: [mongoose.Schema.Types.Decimal128], // [longitude, latitude]
         required: false,
       },
     },
