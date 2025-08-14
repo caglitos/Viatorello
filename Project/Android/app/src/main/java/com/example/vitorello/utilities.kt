@@ -252,7 +252,7 @@ fun center(map: MapView, coordinates: String) {
 }
 
 // Agegar taxisrtas al mapa
-fun addTaxis(map: MapView, icon: Drawable, taxis: List<List<Int>>) {
+fun addTaxis(map: MapView, icon: Drawable, taxis: List<List<Double>>) {
     for( taxi in taxis) {
         if (taxi.size >= 2) {
             val coordinates = """

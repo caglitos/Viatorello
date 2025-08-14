@@ -24,6 +24,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.views.MapView
@@ -46,22 +47,48 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             initTaxis()
             initMap()
+            initInfo()
         }
+    }
+
+    private suspend fun initInfo() {
+
+
     }
 
     private suspend fun initTaxis() {
         mapView = findViewById(R.id.mapa)
 
-        val geoJson = getCurrentGeoJsonPoint(this@MainActivity)
+        val geo = getCurrentGeoJsonPoint(this@MainActivity)
 
-        postRequest("http://10.0.2.2:3000/api/driver/nearby", geoJson) { res, error ->
+        // Parse geo to get latitude and longitude (as backend expects)
+        val geoJson = JSONObject(geo)
+        val coordinates = geoJson.getJSONArray("coordinates")
+
+        // Construye el JSON que espera el backend
+        val json = JSONObject()
+        json.put("latitude", coordinates.getDouble(0))
+        json.put("longitude", coordinates.getDouble(1))
+
+        postRequest("https://viatorello-production.up.railway.app/api/driver/nearby", json.toString()) { res, error ->
             runOnUiThread {
                 if (error != null) {
-                    Log.d(TAG, "logIn: Error $error")
-                    // Maneja el error aquí
+                    Log.d(TAG, "initTaxis: Error $error")
                 } else if (res != null) {
-                    val coords: List<List<Int>> = parseCoordinates(res)
-                    addTaxis(mapView, resources.getDrawable(R.drawable.location, null), coords)
+                    try {
+                        val coords = mutableListOf<List<Double>>()
+                        // Parsear la respuesta del backend
+                        val jsonResponse = JSONObject(res)
+                        val driversArray = jsonResponse.getJSONArray("drivers")
+                        for (i in 0 until driversArray.length()) {
+                            val driverObj = driversArray.getJSONObject(i)
+                            val driverCoords = driverObj.getJSONArray("driverCoordinates")
+                            coords.add(listOf(driverCoords.getDouble(0), driverCoords.getDouble(1)))
+                        }
+                        addTaxis(mapView, resources.getDrawable(R.drawable.location_red, null), coords)
+                    } catch (e: Exception) {
+                        Log.e("initTaxis", "Error parsing response: $e")
+                    }
                 }
             }
         }

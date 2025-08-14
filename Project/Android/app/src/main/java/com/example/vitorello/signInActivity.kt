@@ -52,7 +52,7 @@ class signInActivity : AppCompatActivity() {
     }
 
     private fun initComponent() {
-//        isAuth()
+        isAuth()
         formatHtml()
         initRegisterText()
 
