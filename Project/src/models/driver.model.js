@@ -1,5 +1,3 @@
-import mongoose from "mongoose";
-
 /*
  * Copyright 2025 Carlos Rodrigo Briseño Ruiz
  *
@@ -15,6 +13,8 @@ import mongoose from "mongoose";
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import mongoose from "mongoose";
 
 const driverSchema = new mongoose.Schema(
   {

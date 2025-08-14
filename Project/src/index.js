@@ -1,7 +1,3 @@
-import app from "./app.js";
-import { port } from "./config.js";
-import { connectDB } from "./db.js";
-
 /*
  * Copyright 2025 Carlos Rodrigo Briseño Ruiz
  *
@@ -18,15 +14,13 @@ import { connectDB } from "./db.js";
  * limitations under the License.
  */
 
-console.log(">>> Iniciando aplicación...");
+import app from "./app.js";
+import { port } from "./config.js";
+import { connectDB } from "./db.js";
 
 // Conectar a la base de datos
-console.log(">>> Conectando a la base de datos...");
 connectDB();
 
-console.log(">>> Iniciando servidor...");
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
-
-console.log(">>> Configuración completada");

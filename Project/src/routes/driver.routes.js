@@ -1,21 +1,3 @@
-import express, { Router } from "express";
-import {
-  register,
-  login,
-  logout,
-  profile,
-  getDriverPhoto,
-  updateLocation,
-} from "../controllers/driver.controller.js";
-import { authRequiered } from "../middlewares/validateToken.js";
-import { validateSchema } from "../middlewares/validator.middleware.js";
-import {
-  loginSchema,
-  driverSchema,
-  updateLocationSchema,
-} from "../schemas/driver.schema.js";
-import multer from "multer";
-
 /*
  * Copyright 2025 Carlos Rodrigo Briseño Ruiz
  *
@@ -32,33 +14,54 @@ import multer from "multer";
  * limitations under the License.
  */
 
+import express, {Router} from "express";
+import {
+    register,
+    login,
+    logout,
+    profile,
+    getDriverPhoto,
+    updateLocation,
+    nearby,
+} from "../controllers/driver.controller.js";
+import {authRequiered} from "../middlewares/validateToken.js";
+import {validateSchema} from "../middlewares/validator.middleware.js";
+import {
+    loginSchema,
+    driverSchema,
+    updateLocationSchema,
+} from "../schemas/driver.schema.js";
+import multer from "multer";
+
 const storage = multer.memoryStorage();
-const upload = multer({ storage });
-const download = multer({ storage: storage });
+const upload = multer({storage});
+const download = multer({storage: storage});
 
 const router = Router();
 
 router.post(
-  "/register",
-  upload.single("photo"),
-  validateSchema(driverSchema),
-  register
+    "/register",
+    upload.single("photo"),
+    validateSchema(driverSchema),
+    register
 );
 
 router.post("/login", express.json(), validateSchema(loginSchema), login);
 
 router.post("/logout", logout);
 
+router.post("/nearby", express.json(), nearby)
+
 router.get("/profile", authRequiered, profile);
 
 router.get("/photo", authRequiered, getDriverPhoto);
 
 router.put(
-  "/update-location",
-  express.json(),
-  authRequiered,
-  validateSchema(updateLocationSchema),
-  updateLocation
+    "/update-location",
+    express.json(),
+    authRequiered,
+    validateSchema(updateLocationSchema),
+    updateLocation
 );
 
 export default router;

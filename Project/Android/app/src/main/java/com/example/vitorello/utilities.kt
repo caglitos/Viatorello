@@ -1,3 +1,18 @@
+/*
+ * Copyright 2025 Carlos Rodrigo Briseño Ruiz
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.example.vitorello
 
 import android.annotation.SuppressLint
@@ -25,6 +40,7 @@ import java.util.TimeZone
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import androidx.core.content.edit
+import java.lang.reflect.Array
 
 // Realizar una solicitudes HTTP
 fun postRequest(url: String, jsonBody: String, callback: (String?, Exception?) -> Unit) {
@@ -235,6 +251,26 @@ fun center(map: MapView, coordinates: String) {
     map.controller.setCenter(currentLocation)
 }
 
+// Agegar taxisrtas al mapa
+fun addTaxis(map: MapView, icon: Drawable, taxis: List<List<Int>>) {
+    for( taxi in taxis) {
+        if (taxi.size >= 2) {
+            val coordinates = """
+                {
+                    "type": "Point",
+                    "coordinates": [
+                        ${taxi[1]}, 
+                        ${taxi[0]}
+                    ]
+                }
+            """.trimIndent()
+            createPoint(map, icon, coordinates)
+        } else {
+            Log.e("Taxis", "Invalid taxi data: $taxi")
+        }
+    }
+}
+
 // Crear un punto en el mapa con un icono y coordenadas específicas
 fun createPoint(map: MapView, icon: Drawable, coordinates: String) {
     val json = JSONObject(coordinates)
@@ -247,4 +283,18 @@ fun createPoint(map: MapView, icon: Drawable, coordinates: String) {
     userMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
 
     map.overlays.add(userMarker)
+}
+
+// parsear JSON a Lista de Listas
+fun parseCoordinates(json: String): List<List<Int>> {
+    val result = mutableListOf<List<Int>>()
+    val obj = JSONObject(json)
+    val drivers = obj.getJSONArray("drivers")
+    for (i in 0 until drivers.length()) {
+        val driver = drivers.getJSONObject(i)
+        val coordsArray = driver.getJSONArray("driverCoordinates")
+        val coords = listOf(coordsArray.getInt(0), coordsArray.getInt(1))
+        result.add(coords)
+    }
+    return result
 }

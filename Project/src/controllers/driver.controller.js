@@ -1,7 +1,3 @@
-import bcrypt from "bcryptjs";
-import driver from "../models/driver.model.js";
-import {createAccesToken} from "../libs/jwt.js";
-
 /*
  * Copyright 2025 Carlos Rodrigo Briseño Ruiz
  *
@@ -18,6 +14,10 @@ import {createAccesToken} from "../libs/jwt.js";
  * limitations under the License.
  */
 
+import bcrypt from "bcryptjs";
+import driver from "../models/driver.model.js";
+import {createAccesToken} from "../libs/jwt.js";
+
 // This function registers a new driver and saves it to the database.
 export const register = async (req, res) => {
     console.log("Request body:", req.body);
@@ -33,7 +33,7 @@ export const register = async (req, res) => {
         }
 
         // Importación dinámica para evitar problemas al inicio
-        const { detectMainFace } = await import('../libs/faceDetection.js');
+        const {detectMainFace} = await import('../libs/faceDetection.js');
         const faceResult = await detectMainFace(req.file.buffer);
 
         if (!faceResult.hasFace) {
@@ -198,6 +198,45 @@ export const logout = async (req, res) => {
     res.cookie("token", "", {expires: new Date(0)});
     return res.sendStatus(200);
 };
+
+// This function gets nearby drivers
+export const nearby = async (req, res) => {
+    try {
+        const {
+            latitude,
+            longitude,
+        } = req.body;
+
+        const drivers = await driver.find({
+            currentLocation: {
+                $near: {
+                    $geometry: {
+                        type: "Point",
+                        coordinates: [longitude, latitude],
+                    },
+                    $maxDistance: 200000 // Distancia máxima en METROS
+                }
+            },
+            isOnline: true
+        });
+
+        if (drivers.length === 0) {
+            return res.status(404).json({message: "No drivers found nearby"});
+        }
+
+        return res.status(200).json({
+            msg: "Operación exitosa",
+            drivers: drivers.map(d => ({
+                driversId: d._id,
+                driverCoordinates: [d.currentLocation.coordinates[1], d.currentLocation.coordinates[0]], // [lat, lng]
+            }))
+        });
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({message: "Error retrieving nearby drivers", error: error});
+    }
+}
 
 // This function retrieves the profile information of a driver.
 export const profile = async (req, res) => {

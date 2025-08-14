@@ -1,9 +1,3 @@
-// Configuración de TensorFlow.js para el proyecto Viatorello
-// Este archivo configura TensorFlow.js con el backend CPU estable
-
-import * as tf from "@tensorflow/tfjs";
-import "@tensorflow/tfjs-backend-cpu";
-
 /*
  * Copyright 2025 Carlos Rodrigo Briseño Ruiz
  *
@@ -19,6 +13,13 @@ import "@tensorflow/tfjs-backend-cpu";
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+// Configuración de TensorFlow.js para el proyecto Viatorello
+// Este archivo configura TensorFlow.js con el backend CPU estable
+
+import * as tf from "@tensorflow/tfjs";
+import "@tensorflow/tfjs-backend-cpu";
+
 
 /**
  * Inicializa TensorFlow.js con configuración optimizada

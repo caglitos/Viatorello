@@ -1,9 +1,3 @@
-// src/libs/faceDetection.js
-import * as faceapi from "@vladmandic/face-api";
-import canvas from "canvas";
-import path from "path";
-import { fileURLToPath } from "url";
-
 /*
  * Copyright 2025 Carlos Rodrigo Briseño Ruiz
  *
@@ -19,6 +13,12 @@ import { fileURLToPath } from "url";
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+// src/libs/faceDetection.js
+import * as faceapi from "@vladmandic/face-api";
+import canvas from "canvas";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const LOG = "[faceDetection]";
 

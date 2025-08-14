@@ -1,7 +1,3 @@
-import bcrypt from "bcryptjs";
-import User from "../models/user.model.js";
-import { createAccesToken } from "../libs/jwt.js";
-
 /*
  * Copyright 2025 Carlos Rodrigo Briseño Ruiz
  *
@@ -17,6 +13,10 @@ import { createAccesToken } from "../libs/jwt.js";
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import bcrypt from "bcryptjs";
+import User from "../models/user.model.js";
+import { createAccesToken } from "../libs/jwt.js";
 
 /**
  * @file auth.controller.js

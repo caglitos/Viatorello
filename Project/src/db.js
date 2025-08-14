@@ -1,6 +1,3 @@
-import mongoose from "mongoose";
-import { db } from "./config.js";
-
 /*
  * Copyright 2025 Carlos Rodrigo Briseño Ruiz
  *
@@ -16,6 +13,9 @@ import { db } from "./config.js";
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import mongoose from "mongoose";
+import { db } from "./config.js";
 
 export const connectDB = async () => {
     console.log(">>> Conecting to DB...");

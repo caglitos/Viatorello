@@ -1,5 +1,3 @@
-import {z} from "zod";
-
 /*
  * Copyright 2025 Carlos Rodrigo Briseño Ruiz
  *
@@ -15,6 +13,8 @@ import {z} from "zod";
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import {z} from "zod";
 
 const geoPointSchema = z.object({
     type: z.literal('Point'),

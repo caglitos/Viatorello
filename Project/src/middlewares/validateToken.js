@@ -1,6 +1,3 @@
-import jwt from "jsonwebtoken";
-import { TOKEN_SECRET } from "../config.js";
-
 /*
  * Copyright 2025 Carlos Rodrigo Briseño Ruiz
  *
@@ -16,6 +13,9 @@ import { TOKEN_SECRET } from "../config.js";
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import jwt from "jsonwebtoken";
+import { TOKEN_SECRET } from "../config.js";
 
 export const authRequiered = (req, res, next) => {
   // Buscar token en headers Authorization, cookies, o body

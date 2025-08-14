@@ -1,9 +1,3 @@
-import express from "express";
-import morgan from "morgan";
-import cookieParser from "cookie-parser";
-import cors from "cors";
-import authRoutes from "./routes/auth.routes.js";
-import driverRoutes from "./routes/driver.routes.js";
 
 /*
  * Copyright 2025 Carlos Rodrigo Briseño Ruiz
@@ -20,6 +14,13 @@ import driverRoutes from "./routes/driver.routes.js";
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import express from "express";
+import morgan from "morgan";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import authRoutes from "./routes/auth.routes.js";
+import driverRoutes from "./routes/driver.routes.js";
 
 const app = express();
 
