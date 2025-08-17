@@ -18,7 +18,7 @@ import jwt from "jsonwebtoken";
 import { TOKEN_SECRET } from "../config.js";
 
 export const authRequiered = (req, res, next) => {
-  // Buscar token en headers Authorization, cookies, o body
+  // Retrieve token from Authorization headers, cookies, or body
   let token = req.headers.authorization?.split(" ")[1] || null; // Bearer token
   token = token || req.cookies.token;
 

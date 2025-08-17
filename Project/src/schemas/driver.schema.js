@@ -17,21 +17,35 @@
 import {z} from "zod";
 
 const geoPointSchema = z.object({
-    type: z.literal('Point'),
+    type: z.literal("Point"),
     coordinates: z.array(z.number()).length(2).optional(), // [longitude, latitude]
 });
 
-const vehicleSchema = z.object({
-    brand: z.string(),
-    model: z.string(),
-    year: z.number(),
-    licensePlate: z.string(),
-    capacity: z.number().default(4),
-}).partial();
+const vehicleSchema = z
+    .object({
+        brand: z.string(),
+        model: z.string(),
+        year: z.number(),
+        licensePlate: z.string(),
+        capacity: z.number().default(4),
+    })
+    .partial();
 
 const documentVerificationSchema = z.object({
     number: z.string().optional(),
-    expiryDate: z.date().optional(),
+    expiryDate: z
+        .string()
+        .optional()
+        .refine(
+            (date) => {
+                if (!date) return true;
+                return !isNaN(Date.parse(date));
+            },
+            {
+                message:
+                    "Invalid date format. Use ISO string format (YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ)",
+            }
+        ),
     isVerified: z.boolean().default(false),
 });
 
@@ -43,12 +57,14 @@ const documentsSchema = z.object({
 
 export const driverSchema = z.object({
     fullName: z.string().trim(),
-    email: z.string({
-        required_error: "Email is required",
-    })
+    email: z
+        .string({
+            required_error: "Email is required",
+        })
         .email({
             message: "Invalid email",
-        }).trim(),
+        })
+        .trim(),
     password: z
         .string({
             required_error: "Password is required",
@@ -67,9 +83,11 @@ export const driverSchema = z.object({
 
     isOnline: z.boolean().default(false),
 
+    number: z.number(),
+
     vehicle: vehicleSchema.optional(),
 
-    documents: documentsSchema.optional()
+    documents: documentsSchema.optional(),
 });
 
 export const loginSchema = z.object({
@@ -79,7 +97,8 @@ export const loginSchema = z.object({
         })
         .email({
             message: "Invalid email",
-        }).trim(),
+        })
+        .trim(),
     password: z
         .string({
             required_error: "Password is required",
@@ -92,9 +111,7 @@ export const loginSchema = z.object({
         coordinates: [0, 0],
     }),
 
-    isOnline: z
-        .boolean()
-        .default(false),
+    isOnline: z.boolean().default(false),
 
     lastLocationUpdate: geoPointSchema.optional().default({
         type: "Point",
@@ -109,7 +126,8 @@ export const updateLocationSchema = z.object({
         })
         .email({
             message: "Invalid email",
-        }).trim(),
+        })
+        .trim(),
     currentLocation: geoPointSchema.optional().default({
         type: "Point",
         coordinates: [0, 0],

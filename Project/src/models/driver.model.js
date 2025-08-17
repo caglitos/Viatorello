@@ -16,9 +16,9 @@
 
 import mongoose from "mongoose";
 
-const driverSchema = new mongoose.Schema(
+const driverModel = new mongoose.Schema(
   {
-    // Información básica del conductor
+    // Basic driver information
     fullName: {
       type: String,
       required: true,
@@ -36,7 +36,7 @@ const driverSchema = new mongoose.Schema(
       required: true,
     },
 
-    // Ubicación actual en tiempo real
+    // Real-time current location
     currentTrip: {
       type: {
         type: String,
@@ -55,18 +55,25 @@ const driverSchema = new mongoose.Schema(
         default: "Point",
       },
       coordinates: {
-          type: [mongoose.Schema.Types.Decimal128], // [longitude, latitude]
+        type: [mongoose.Schema.Types.Decimal128], // [longitude, latitude]
         required: false,
       },
     },
 
-    // Estado del conductor
+    // Driver status
     isOnline: {
       type: Boolean,
       default: false,
     },
 
-    // Información del vehículo
+    // Number of the driver
+    number: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    // Vehicle information
     vehicle: {
       brand: {
         type: String,
@@ -93,7 +100,7 @@ const driverSchema = new mongoose.Schema(
       },
     },
 
-    // Documentación y verificación
+    // Documentation and verification
     documents: {
       driverLicense: {
         number: String,
@@ -121,7 +128,7 @@ const driverSchema = new mongoose.Schema(
       },
     },
 
-    // Rating y estadísticas
+    // Rating and statistics
     rating: {
       average: {
         type: Number,
@@ -143,16 +150,10 @@ const driverSchema = new mongoose.Schema(
       default: 0,
     },
 
-    // Estado de cuenta
+    // Account status
     isVerified: {
       type: Boolean,
       default: false, // true cuando todos los documentos estén verificados
-    },
-
-    // Foto del conductor
-    photo: {
-      data: Buffer,
-      contentType: String,
     },
   },
   {
@@ -160,11 +161,11 @@ const driverSchema = new mongoose.Schema(
   }
 );
 
-// Índice geoespacial para búsquedas por proximidad
-driverSchema.index({ currentLocation: "2dsphere" });
+// Geospatial index for proximity searches
+driverModel.index({ currentLocation: "2dsphere" });
 
 // Índices para consultas frecuentes
-driverSchema.index({ isOnline: 1, isAvailable: 1 });
-driverSchema.index({ "vehicle.licensePlate": 1 });
+driverModel.index({ isOnline: 1, isAvailable: 1 });
+driverModel.index({ "vehicle.licensePlate": 1 });
 
-export default mongoose.model("Driver", driverSchema);
+export default mongoose.model("Driver", driverModel);

@@ -17,56 +17,56 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
-    {
-        username: {
-            type: String,
-            required: true,
-            trim: true,
-        },
-        email: {
-            type: String,
-            required: true,
-            unique: true,
-            trim: true,
-        },
-        password: {
-            type: String,
-            required: true,
-        },
-        // Ubicación actual en tiempo real
-        currentLocation: {
-            type: {
-                type: String,
-                enum: ["Point"],
-                default: "Point",
-            },
-            coordinates: {
-                type: [Number], // [longitude, latitude]
-                required: false,
-            },
-        },
-        // Estado de conexión del usuario
-        isOnline: {
-            type: Boolean,
-            default: false,
-        },
-        lastLocationUpdate: {
-            type: Date,
-            default: null,
-        },
-        // Información del viaje actual (si está en uno)
-        currentTrip: {
-            type: Boolean,
-            ref: "Trip",
-            default: null,
-        },
+  {
+    username: {
+      type: String,
+      required: true,
+      trim: true,
     },
-    {
-        timestamps: true,
-    }
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    // Real-time current location
+    currentLocation: {
+      type: {
+        type: String,
+        enum: ["Point"],
+        default: "Point",
+      },
+      coordinates: {
+        type: [Number], // [longitude, latitude]
+        required: false,
+      },
+    },
+    // User connection status
+    isOnline: {
+      type: Boolean,
+      default: false,
+    },
+    lastLocationUpdate: {
+      type: Date,
+      default: null,
+    },
+    // Current trip information (if in one)
+    currentTrip: {
+      type: Boolean,
+      ref: "Trip",
+      default: null,
+    },
+  },
+  {
+    timestamps: true,
+  }
 );
 
-// Crear índice geoespacial para consultas de ubicación eficientes
-userSchema.index({currentLocation: "2dsphere"});
+// Create geospatial index for efficient location queries
+userSchema.index({ currentLocation: "2dsphere" });
 
 export default mongoose.model("User", userSchema);

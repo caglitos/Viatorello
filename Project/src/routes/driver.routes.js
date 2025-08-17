@@ -14,54 +14,38 @@
  * limitations under the License.
  */
 
-import express, {Router} from "express";
+import { Router } from "express";
 import {
     register,
     login,
     logout,
     profile,
-    getDriverPhoto,
-    updateLocation,
     nearby,
+    registerPhoto,
 } from "../controllers/driver.controller.js";
-import {authRequiered} from "../middlewares/validateToken.js";
-import {validateSchema} from "../middlewares/validator.middleware.js";
+import { validateSchema } from "../middlewares/validator.middleware.js";
 import {
-    loginSchema,
-    driverSchema,
-    updateLocationSchema,
+  loginSchema,
+  driverSchema,
 } from "../schemas/driver.schema.js";
-import multer from "multer";
-
-const storage = multer.memoryStorage();
-const upload = multer({storage});
-const download = multer({storage: storage});
+import { photoSchema } from "../schemas/driver.photo.schema.js";
 
 const router = Router();
 
 router.post(
-    "/register",
-    upload.single("photo"),
-    validateSchema(driverSchema),
-    register
+  "/register",
+  validateSchema(driverSchema),
+  register
 );
 
-router.post("/login", express.json(), validateSchema(loginSchema), login);
+router.post("/register-photo", validateSchema(photoSchema), registerPhoto);
+
+router.post("/login", validateSchema(loginSchema), login);
 
 router.post("/logout", logout);
 
-router.post("/nearby", express.json(), nearby)
+router.get("/nearby/:latitude/:longitude", nearby);
 
-router.get("/profile", authRequiered, profile);
-
-router.get("/photo", authRequiered, getDriverPhoto);
-
-router.put(
-    "/update-location",
-    express.json(),
-    authRequiered,
-    validateSchema(updateLocationSchema),
-    updateLocation
-);
+router.get("/profile:id", profile);
 
 export default router;

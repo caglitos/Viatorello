@@ -39,7 +39,7 @@ export const registerSchema = z.object({
       message: "Password must contain at least one uppercase letter",
     }),
 
-  // Campos opcionales para el registro
+  // Optional fields for registration
   currentLocation: geoPointSchema.optional(),
   isOnline: z.boolean().optional().default(false),
   lastLocationUpdate: z.string().datetime().optional(),
@@ -61,7 +61,7 @@ export const loginSchema = z.object({
     .min(6, {
       message: "Password must be at least 6 characters long",
     }),
-  // Campos opcionales que se pueden enviar con el login para actualizar estado
+  // Optional fields that can be sent with login to update status
   currentLocation: geoPointSchema.optional(),
   isOnline: z.boolean().optional(),
   lastLocationUpdate: z.string().datetime().optional(),

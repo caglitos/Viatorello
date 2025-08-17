@@ -73,8 +73,8 @@ class MainActivity : AppCompatActivity() {
         json.put("longitude", coordinates.getDouble(1))
 
         getRequest(
-            "http://10.0.2.2:3000/api/driver/nearby/${
-//            "https://viatorello-production.up.railway.app/api/driver/nearby/${
+//            "http://10.0.2.2:3000/api/driver/nearby/${
+            "https://viatorello-production.up.railway.app/api/driver/nearby/${
                 coordinates.getDouble(
                     0
                 )   

@@ -47,7 +47,7 @@ export const register = async (req, res) => {
   try {
     const passwordHash = await bcrypt.hash(password, 10);
 
-    // Solo asigna los campos definidos en el modelo de Mongoose
+    // Only assign fields defined in the Mongoose model
     const newUser = new User({
       username: username.trim(),
       email: email.toLowerCase().trim(),
