@@ -77,7 +77,7 @@ fun getRequest(url: String, jsonBody: String, callback: (String?, Exception?) ->
     val requestBody = jsonBody.toRequestBody(mediaType)
     val request = Request.Builder()
         .url(url)
-        .method("GET", requestBody)
+        .method("GET", null)
         .build()
 
     client.newCall(request).enqueue(object : Callback {

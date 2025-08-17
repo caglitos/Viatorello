@@ -28,10 +28,12 @@ import org.json.JSONObject
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.views.MapView
+import com.example.vitorello.getCurrentGeoJsonPoint
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
     private lateinit var mapView: MapView
+    private var drivers = JSONObject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +72,19 @@ class MainActivity : AppCompatActivity() {
         json.put("latitude", coordinates.getDouble(0))
         json.put("longitude", coordinates.getDouble(1))
 
-        postRequest("https://viatorello-production.up.railway.app/api/driver/nearby", json.toString()) { res, error ->
+        getRequest(
+            "http://10.0.2.2:3000/api/driver/nearby/${
+//            "https://viatorello-production.up.railway.app/api/driver/nearby/${
+                coordinates.getDouble(
+                    0
+                )   
+            }/${
+                coordinates.getDouble(
+                    1
+                )
+            }",
+            "",
+        ) { res, error ->
             runOnUiThread {
                 if (error != null) {
                     Log.d(TAG, "initTaxis: Error $error")
@@ -84,8 +98,15 @@ class MainActivity : AppCompatActivity() {
                             val driverObj = driversArray.getJSONObject(i)
                             val driverCoords = driverObj.getJSONArray("driverCoordinates")
                             coords.add(listOf(driverCoords.getDouble(0), driverCoords.getDouble(1)))
+                            drivers.put("driversId", driverObj.getString("driverId"))
                         }
-                        addTaxis(mapView, resources.getDrawable(R.drawable.location_red, null), coords)
+                        addTaxis(
+                            mapView,
+                            resources.getDrawable(R.drawable.location_red, null),
+                            coords
+                        )
+
+
                     } catch (e: Exception) {
                         Log.e("initTaxis", "Error parsing response: $e")
                     }

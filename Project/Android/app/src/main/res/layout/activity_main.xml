@@ -120,14 +120,14 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:textSize="20sp"
-                app:layout_constraintBottom_toTopOf="@id/tvMascota"
+                app:layout_constraintBottom_toTopOf="@id/tvRating"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvTiempo"
                 tools:text="@string/car" />
 
             <TextView
-                android:id="@+id/tvMascota"
+                android:id="@+id/tvRating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
@@ -136,7 +136,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvAuto"
-                tools:text="@string/pets" />
+                tools:text="@string/rating" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <FrameLayout

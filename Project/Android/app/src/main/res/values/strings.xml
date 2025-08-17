@@ -5,7 +5,7 @@
     <string name="driver">Chofer:</string>
     <string name="number">Numero:</string>
     <string name="time">Tiempo:</string>
-    <string name="pets">Mascotas:</string>
+    <string name="rating">Calificacion:</string>
     <string name="car">Auto:</string>
     <string name="LogIn"><u>Inicia Sesion</u></string>
     <string name="email">Correo Electronico</string>
