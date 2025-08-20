@@ -17,6 +17,7 @@ package com.example.vitorello
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Looper
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
@@ -28,12 +29,14 @@ import org.json.JSONObject
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.views.MapView
-import com.example.vitorello.getCurrentGeoJsonPoint
+import android.os.Handler
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
     private lateinit var mapView: MapView
     private var drivers = JSONObject()
+    private val handler = Handler(Looper.getMainLooper())
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,10 +50,32 @@ class MainActivity : AppCompatActivity() {
         initAjustes()
 
         lifecycleScope.launch {
-            initTaxis()
             initMap()
             initInfo()
         }
+    }
+
+    private val updateRunnable = object : Runnable {
+        override fun run() {
+            // Tu función que hace la petición
+            lifecycleScope.launch {
+                initTaxis()
+            }
+            // Vuelve a ejecutar en 5 segundos (5000 ms)
+            handler.postDelayed(this, 5000)
+        }
+    }
+
+    // Para iniciar el bucle
+    override fun onStart() {
+        super.onStart()
+        handler.post(updateRunnable)
+    }
+
+    // Para detener el bucle (importante para evitar leaks)
+    override fun onStop() {
+        super.onStop()
+        handler.removeCallbacks(updateRunnable)
     }
 
     private suspend fun initInfo() {
@@ -73,16 +98,10 @@ class MainActivity : AppCompatActivity() {
         json.put("longitude", coordinates.getDouble(1))
 
         getRequest(
-//            "http://10.0.2.2:3000/api/driver/nearby/${
-            "https://viatorello-production.up.railway.app/api/driver/nearby/${
-                coordinates.getDouble(
-                    0
-                )   
-            }/${
-                coordinates.getDouble(
-                    1
-                )
-            }",
+            "http://10.0.2.2:3000/api/driver/nearby/${
+//            "https://viatorello-production.up.railway.app/api/driver/nearby/${
+                coordinates.getDouble(0)
+            }/${coordinates.getDouble(1)}",
             "",
         ) { res, error ->
             runOnUiThread {
@@ -94,11 +113,17 @@ class MainActivity : AppCompatActivity() {
                         // Parsear la respuesta del backend
                         val jsonResponse = JSONObject(res)
                         val driversArray = jsonResponse.getJSONArray("drivers")
+                        Log.d(TAG, "initTaxis: driversArray $driversArray")
                         for (i in 0 until driversArray.length()) {
                             val driverObj = driversArray.getJSONObject(i)
                             val driverCoords = driverObj.getJSONArray("driverCoordinates")
-                            coords.add(listOf(driverCoords.getDouble(0), driverCoords.getDouble(1)))
-                            drivers.put("driversId", driverObj.getString("driverId"))
+                            coords.add(
+                                listOf(
+                                    driverCoords.getString(0).toDouble(),
+                                    driverCoords.getString(1).toDouble()
+                                )
+                            )
+                            drivers.put("driversId", driverObj.getString("driversId"))
                         }
                         addTaxis(
                             mapView,
@@ -170,3 +195,4 @@ class MainActivity : AppCompatActivity() {
         Log.d("MainActivity", "initMap: OSMDroid configurado exitosamente")
     }
 }
+

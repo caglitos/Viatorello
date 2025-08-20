@@ -207,15 +207,13 @@ export const logout = async (req, res) => {
 // This function gets nearby drivers
 export const nearby = async (req, res) => {
     try {
-        const {latitude, longitude} = req.params;
-        // Example inside your loop:
-        const overLap = 100; // Overlap distance between rings
-        var minDistance = 0;
-        var maxDistance = 500;
-        var drivers = [];
+        const { latitude, longitude } = req.params;
+        const overLap = 100;
+        let minDistance = 0;
+        let maxDistance = 500;
+        let drivers = [];
 
-        while (drivers.length === 0 && maxDistance <= 5000000) {
-            // Limit search to a maximum of 5 km
+        while (drivers.length === 0 && maxDistance <= 50000) {
             drivers = await Driver.find({
                 currentLocation: {
                     $near: {
@@ -223,38 +221,43 @@ export const nearby = async (req, res) => {
                             type: "Point",
                             coordinates: [longitude, latitude],
                         },
-                        $minDistance: minDistance, // Minimum distance
-                        $maxDistance: maxDistance, // Maximum distance
+                        $minDistance: minDistance,
+                        $maxDistance: maxDistance,
                     },
                 },
                 isOnline: true,
             });
 
             if (drivers.length === 0) {
-                minDistance = maxDistance - overLap; // The next ring starts where the previous one ended, providing a buffer in case a user changed position
-                maxDistance += 500; // Increment maximum distance
+                minDistance = maxDistance - overLap;
+                maxDistance += 500;
             }
         }
 
         if (drivers.length === 0) {
-            return res.status(404).json({message: "No drivers found nearby"});
+            return res.status(404).json({ message: "No drivers found nearby" });
         }
 
+        // Formatea los resultados
+        const driversData = drivers.map((d) => ({
+            driversId: d._id,
+            driverCoordinates: [
+                Number(d.currentLocation.coordinates[1].toString()),
+                Number(d.currentLocation.coordinates[0].toString()),
+            ], // [lat, lng]
+        }));
+
+        // Sigue respondiendo por HTTP por compatibilidad
         return res.status(200).json({
-            msg: `Succes, found ${drivers.length} drivers, in a radius of ${maxDistance} meters`,
-            drivers: drivers.map((d) => ({
-                driversId: d._id,
-                driverCoordinates: [
-                    d.currentLocation.coordinates[1],
-                    d.currentLocation.coordinates[0],
-                ], // [lat, lng]
-            })),
+            msg: `Success, found ${drivers.length} drivers, in a radius of ${maxDistance} meters`,
+            drivers: driversData,
         });
+
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .json({message: "Error retrieving nearby drivers", error: error});
+            .json({ message: "Error retrieving nearby drivers", error: error });
     }
 };
 
@@ -263,13 +266,28 @@ export const profile = async (req, res) => {
 
     try {
 
-        const driverFound = await Driver.findById(id);
+
+        const driverFound = await Driver.findOne({
+            "_id": id,
+        });
 
         if (!driverFound) {
             return res.status(404).json({ message: "Driver not found" });
         }
         return res.json({
-            driverFound
+            message: "Driver profile retrieved successfully",
+            fullName: driverFound.fullName,
+            number: driverFound.number,
+            currentTrip: [
+                Number(driverFound.currentTrip.coordinates[1].toString()),
+                Number(driverFound.currentTrip.coordinates[0].toString()),
+            ],
+            currentLocation: [
+                Number(driverFound.currentLocation.coordinates[1].toString()),
+                Number(driverFound.currentLocation.coordinates[0].toString()),
+            ],
+            vehicle: driverFound.vehicle,
+            isVerificad: driverFound.isVerified,
         });
     } catch (error) {
         console.log(error);
