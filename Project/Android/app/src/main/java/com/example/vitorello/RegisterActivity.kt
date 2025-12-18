@@ -49,7 +49,6 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     fun initComponent() {
-//        isAuth()
         initLoginText()
         formatHtml()
         togglePwdVisibility()
@@ -84,7 +83,7 @@ class RegisterActivity : AppCompatActivity() {
         val geoJson = getCurrentGeoJsonPoint(this@RegisterActivity)
 
         registerBtn.setOnClickListener {
-            val confirmpwd = confirmPasword()
+            val confirmpwd = confirmPassword()
 
             if (confirmpwd is Int)
                 pwdMsg.text = getString(confirmpwd)
@@ -98,16 +97,17 @@ class RegisterActivity : AppCompatActivity() {
                         "lastLocationUpdate": "${isoDate()}",
                         "currentTrip": false} """.trimIndent()
 
-                postRequest(
-                    "https://viatorello-production.up.railway.app/api/auth/register",
-                    json
-                ) { res, error ->
-//            postRequest("http://10.0.2.2:3000/api/Register", json) { res, error ->
+//                postRequest(
+//                    "https://viatorello-production.up.railway.app/api/auth/register",
+//                    json
+//                ) { res, error ->
+                postRequest("http://10.0.2.2:3000/api/auth/register", json) { res, error ->
                     runOnUiThread {
                         if (error != null) {
-                            Log.d(TAG, "logIn: Error $error")
+                            Log.d(TAG, "Register: Error $error")
                             registerError()
                         } else {
+                            Log.d(TAG, res.toString())
                             registeredSuccessful(res)
                         }
                     }
@@ -172,7 +172,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     // Validate the password and confirm password fields
-    private fun confirmPasword(): Any {
+    private fun confirmPassword(): Any {
         val password: EditText = findViewById(R.id.passwordInput)
         val confirmPassword: EditText = findViewById(R.id.passwordConfirmInput)
         val pwd = password.text.toString()
@@ -206,16 +206,6 @@ class RegisterActivity : AppCompatActivity() {
             return R.string.pwdOnlyLetters
 
         return true
-    }
-
-    // Check if the user is already authenticated
-    private fun isAuth() {
-        val token = getAuthToken(this)
-
-        if (token != null) {
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
-        }
     }
 
     private fun newUser(): String {

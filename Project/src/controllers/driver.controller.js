@@ -208,7 +208,7 @@ export const logout = async (req, res) => {
 export const nearby = async (req, res) => {
     try {
         const { latitude, longitude } = req.params;
-        const overLap = 100;
+        const overLap = 50;
         let minDistance = 0;
         let maxDistance = 500;
         let drivers = [];
@@ -235,15 +235,15 @@ export const nearby = async (req, res) => {
         }
 
         if (drivers.length === 0) {
-            return res.status(404).json({ message: "No drivers found nearby" });
+            return res.status(204).json({ message: "No drivers found nearby" });
         }
 
         // Formatea los resultados
-        const driversData = drivers.map((d) => ({
-            driversId: d._id,
+        const driversData = drivers.map((currentDriver) => ({
+            driversId: currentDriver._id,
             driverCoordinates: [
-                Number(d.currentLocation.coordinates[1].toString()),
-                Number(d.currentLocation.coordinates[0].toString()),
+                Number(currentDriver.currentLocation.coordinates[1].toString()),
+                Number(currentDriver.currentLocation.coordinates[0].toString()),
             ], // [lat, lng]
         }));
 
@@ -265,15 +265,14 @@ export const profile = async (req, res) => {
     const { id } = req.params;
 
     try {
-
-
         const driverFound = await Driver.findOne({
             "_id": id,
         });
 
         if (!driverFound) {
-            return res.status(404).json({ message: "Driver not found" });
+            return res.status(204).json({ message: "Driver not found" });
         }
+
         return res.json({
             message: "Driver profile retrieved successfully",
             fullName: driverFound.fullName,

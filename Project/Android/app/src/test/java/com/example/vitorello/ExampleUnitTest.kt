@@ -1,7 +1,6 @@
 package com.example.vitorello
 
 import org.junit.Test
-
 import org.junit.Assert.*
 
 /**

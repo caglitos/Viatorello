@@ -16,10 +16,10 @@
 
 import { Router } from "express";
 import {
-  login,
-  register,
-  logout,
-  profile,
+    login,
+    register,
+    logout,
+    profile, updateLocation,
 } from "../controllers/auth.controller.js";
 import { authRequiered } from "../middlewares/validateToken.js";
 import { validateSchema } from "../middlewares/validator.middleware.js";
@@ -34,5 +34,7 @@ router.post("/login", validateSchema(loginSchema), login);
 router.post("/logout", logout);
 
 router.get("/profile", authRequiered, profile);
+
+router.put("/update-coords", authRequiered, updateLocation);
 
 export default router;

@@ -53,6 +53,7 @@ dependencies {
     // Networking and API communication
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation(libs.logging.interceptor)
 
     // Kotlin and AndroidX utilities
@@ -66,4 +67,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    testImplementation("com.squareup.okhttp3:okhttp:4.12.0")
 }

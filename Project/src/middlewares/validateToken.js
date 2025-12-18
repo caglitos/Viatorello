@@ -18,18 +18,16 @@ import jwt from "jsonwebtoken";
 import { TOKEN_SECRET } from "../config.js";
 
 export const authRequiered = (req, res, next) => {
-  // Retrieve token from Authorization headers, cookies, or body
-  let token = req.headers.authorization?.split(" ")[1] || null; // Bearer token
-  token = token || req.cookies.token;
+    const { token } = req.headers;
 
-  if (!token)
-    return res.status(401).json({ message: "No token, authorization denied" });
+    if (!token)
+        return res.status(401).json({ message: "No token, authorization denied" });
 
-  jwt.verify(token, TOKEN_SECRET, (err, user) => {
-    if (err) return res.status(403).json({ message: "Invalid token" });
+    jwt.verify(token, TOKEN_SECRET, (err, user) => {
+        if (err) return res.status(403).json({ message: "Invalid token" });
 
-    req.user = user;
-    req.userId = user.id;
-    next();
-  });
+        req.user = user;
+        req.userId = user.id;
+        next();
+    });
 };

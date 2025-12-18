@@ -46,6 +46,6 @@ router.post("/logout", logout);
 
 router.get("/nearby/:latitude/:longitude", nearby);
 
-router.get("/profile:id", profile);
+router.get("/profile/:id", profile);
 
 export default router;

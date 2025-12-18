@@ -18,7 +18,6 @@ package com.example.vitorello
 import android.content.Intent
 import android.os.Bundle
 import android.os.Looper
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -30,10 +29,15 @@ import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.views.MapView
 import android.os.Handler
+import android.content.Context
+import kotlin.reflect.typeOf
 
+@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
     private lateinit var mapView: MapView
+    private val context: Context = this@MainActivity
+    private var driversIDs = mutableListOf<String>()
     private var drivers = JSONObject()
     private val handler = Handler(Looper.getMainLooper())
 
@@ -45,23 +49,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initComponets() {
-        initBotMenu()
+//        initBotMenu()
         initDestino()
         initAjustes()
 
         lifecycleScope.launch {
             initMap()
-            initInfo()
+            initTaxiIDs()
         }
     }
 
     private val updateRunnable = object : Runnable {
         override fun run() {
-            // Tu función que hace la petición
             lifecycleScope.launch {
                 initTaxis()
             }
-            // Vuelve a ejecutar en 5 segundos (5000 ms)
+            // execute every second
             handler.postDelayed(this, 5000)
         }
     }
@@ -78,15 +81,10 @@ class MainActivity : AppCompatActivity() {
         handler.removeCallbacks(updateRunnable)
     }
 
-    private suspend fun initInfo() {
-
-
-    }
-
     private suspend fun initTaxis() {
         mapView = findViewById(R.id.mapa)
 
-        val geo = getCurrentGeoJsonPoint(this@MainActivity)
+        val geo = getCurrentGeoJsonPoint(context)
 
         // Parse geo to get latitude and longitude (as backend expects)
         val geoJson = JSONObject(geo)
@@ -97,44 +95,93 @@ class MainActivity : AppCompatActivity() {
         json.put("latitude", coordinates.getDouble(0))
         json.put("longitude", coordinates.getDouble(1))
 
-        getRequest(
-            "http://10.0.2.2:3000/api/driver/nearby/${
-//            "https://viatorello-production.up.railway.app/api/driver/nearby/${
-                coordinates.getDouble(0)
-            }/${coordinates.getDouble(1)}",
-            "",
-        ) { res, error ->
+        val url = "http://10.0.2.2:3000/api/driver/nearby/${
+            coordinates.getDouble(0)
+        }/${coordinates.getDouble(1)}"
+
+//        val url = "https://viatorello-production.up.railway.app/api/driver/nearby/${
+//            coordinates.getDouble(0)
+//        }/${coordinates.getDouble(1)}"
+
+        getRequest( url, "") { res, error ->
             runOnUiThread {
-                if (error != null) {
-                    Log.d(TAG, "initTaxis: Error $error")
-                } else if (res != null) {
-                    try {
-                        val coords = mutableListOf<List<Double>>()
-                        // Parsear la respuesta del backend
-                        val jsonResponse = JSONObject(res)
-                        val driversArray = jsonResponse.getJSONArray("drivers")
-                        Log.d(TAG, "initTaxis: driversArray $driversArray")
-                        for (i in 0 until driversArray.length()) {
-                            val driverObj = driversArray.getJSONObject(i)
-                            val driverCoords = driverObj.getJSONArray("driverCoordinates")
-                            coords.add(
-                                listOf(
-                                    driverCoords.getString(0).toDouble(),
-                                    driverCoords.getString(1).toDouble()
-                                )
+                try {
+                    val coords = mutableListOf<List<Double>>()
+                    // Parsear la respuesta del backend
+                    val jsonResponse = JSONObject(res)
+                    val driversArray = jsonResponse.getJSONArray("drivers")
+                    Log.d(TAG, "initTaxis: driversArray $driversArray")
+                    for (i in 0 until driversArray.length()) {
+                        val driverObj = driversArray.getJSONObject(i)
+                        val driverCoords = driverObj.getJSONArray("driverCoordinates")
+                        coords.add(
+                            listOf(
+                                driverCoords.getString(0).toDouble(),
+                                driverCoords.getString(1).toDouble()
                             )
-                            drivers.put("driversId", driverObj.getString("driversId"))
-                        }
-                        addTaxis(
-                            mapView,
-                            resources.getDrawable(R.drawable.location_red, null),
-                            coords
                         )
-
-
-                    } catch (e: Exception) {
-                        Log.e("initTaxis", "Error parsing response: $e")
                     }
+
+                    removeAllMarkers(mapView)
+
+                    addTaxis(
+                        mapView,
+                        resources.getDrawable(R.drawable.location_red, null),
+                        coords
+                    )
+                } catch (e: Exception) {
+                    Log.e("initTaxis", "Error: $e")
+                }
+            }
+        }
+    }
+
+    private suspend fun initTaxiIDs() {
+        val geo = getCurrentGeoJsonPoint(context)
+
+        val geoJSON = JSONObject(geo)
+        val coordinates = geoJSON.getJSONArray("coordinates")
+
+        val url = "http://10.0.2.2:3000/api/driver/nearby/" +
+                "${coordinates.getDouble(0)}/" +
+                "${coordinates.getDouble(1)}"
+//        val url = "https://viatorello-production.up.railway.app/api/driver/nearby/" +
+//                "${coordinates.getDouble(0)}/" +
+//                "${coordinates.getDouble(1)}"
+
+        getRequest(url, "") { res, error ->
+            if (error != null) {
+                Log.d(TAG, "Error: ${error.message}")
+
+            } else if (res.isNullOrEmpty()) {
+                Log.e(TAG, "Respuesta vacía del backend")
+            } else {
+                Log.d(TAG, "Tipo de res: ${(res!!)::class.java.name}")
+                val jsonResponse = JSONObject(res)
+                val jsonDrivers = jsonResponse.getJSONArray("drivers")
+                val driverIds = mutableListOf<String>()
+                for (i in 0 until jsonDrivers.length()) {
+                    val driver = jsonDrivers.getJSONObject(i)
+                    val driverId = driver.getString("driversId")
+                    println("Driver ID: $driverId")
+                    driverIds.add(driverId)
+                }
+                getTaxiInfoById(driverIds)
+            }
+        }
+
+    }
+
+    fun getTaxiInfoById(driverIds: List<String>) {
+
+        for (driverId in driverIds) {
+            getRequest(
+                "http://localhost:3000/api/driver/profile/${driverId}", ""
+            ) { response, exception ->
+                if (exception != null) {
+                    println("Error: ${exception.message}")
+                } else {
+                    println("Driver Name: ${response.toString()}")
                 }
             }
         }
@@ -156,29 +203,29 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initBotMenu() {
-        busButton()
-        desButton()
-    }
+//    private fun initBotMenu() {
+//        busButton()
+//        desButton()
+//    }
 
-    private fun desButton() {
-        val despensa: Button = findViewById(R.id.bDespensa)
-        despensa.setOnClickListener {
-            startActivity(Intent(this, despensaActivity::class.java))
-        }
-    }
-
-    private fun busButton() {
-        val bus: Button = findViewById(R.id.bBus)
-        bus.setOnClickListener {
-            startActivity(Intent(this, busActivity::class.java))
-        }
-    }
+//    private fun desButton() {
+//        val despensa: Button = findViewById(R.id.bDespensa)
+//        despensa.setOnClickListener {
+//            startActivity(Intent(this, despensaActivity::class.java))
+//        }
+//    }
+//
+//    private fun busButton() {
+//        val bus: Button = findViewById(R.id.bBus)
+//        bus.setOnClickListener {
+//            startActivity(Intent(this, busActivity::class.java))
+//        }
+//    }
 
     private suspend fun initMap() {
         Configuration.getInstance().load(this, getSharedPreferences("osmdroid", 0))
 
-        val geoJson = getCurrentGeoJsonPoint(this@MainActivity)
+        val geoJson = getCurrentGeoJsonPoint(context)
 
         mapView = findViewById(R.id.mapa)
         Log.d(TAG, "initComponets: Iniciando componentes de la actividad principal")
@@ -194,5 +241,7 @@ class MainActivity : AppCompatActivity() {
 
         Log.d("MainActivity", "initMap: OSMDroid configurado exitosamente")
     }
+
+
 }
 

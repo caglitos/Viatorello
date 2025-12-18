@@ -40,12 +40,31 @@ import java.util.TimeZone
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import androidx.core.content.edit
-import java.lang.reflect.Array
+import okhttp3.Cookie
+import okhttp3.CookieJar
+import okhttp3.HttpUrl
+
+public const val BASE_URL = "http://10.0.2.2:3000/api"
 
 // Realizar una solicitudes HTTP
-fun postRequest(url: String, jsonBody: String, callback: (String?, Exception?) -> Unit) {
-    val client = OkHttpClient()
+// Cliente HTTP reutilizable con soporte de cookies
+private val httpClient: OkHttpClient by lazy {
+    OkHttpClient.Builder()
+        .cookieJar(object : CookieJar {
+            private val cookieStore = mutableMapOf<HttpUrl, List<Cookie>>()
 
+            override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
+                cookieStore[url] = cookies
+            }
+
+            override fun loadForRequest(url: HttpUrl): List<Cookie> {
+                return cookieStore[url] ?: emptyList()
+            }
+        })
+        .build()
+}
+
+fun postRequest(url: String, jsonBody: String, callback: (String?, Exception?) -> Unit) {
     val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
     val requestBody = jsonBody.toRequestBody(mediaType)
 
@@ -54,7 +73,7 @@ fun postRequest(url: String, jsonBody: String, callback: (String?, Exception?) -
         .post(requestBody)
         .build()
 
-    client.newCall(request).enqueue(object : Callback {
+    httpClient.newCall(request).enqueue(object : Callback {
         override fun onFailure(call: Call, e: IOException) {
             callback(null, e)
         }
@@ -72,15 +91,36 @@ fun postRequest(url: String, jsonBody: String, callback: (String?, Exception?) -
 }
 
 fun getRequest(url: String, jsonBody: String, callback: (String?, Exception?) -> Unit) {
-    val client = OkHttpClient()
-    val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
-    val requestBody = jsonBody.toRequestBody(mediaType)
     val request = Request.Builder()
         .url(url)
-        .method("GET", null)
+        .get()
         .build()
 
-    client.newCall(request).enqueue(object : Callback {
+    httpClient.newCall(request).enqueue(object : Callback {
+        override fun onFailure(call: Call, e: IOException) {
+            callback(null, e)
+        }
+
+        override fun onResponse(call: Call, response: Response) {
+            response.use {
+                if (!response.isSuccessful) {
+                    callback(null, IOException("Unexpected code $response"))
+                } else {
+                    callback(response.body?.string(), null)
+                }
+            }
+        }
+    })
+}
+
+fun getRequest(url: String, jsonBody: String, token: String, callback: (String?, Exception?) -> Unit) {
+    val request = Request.Builder()
+        .url(url)
+        .get()
+        .header("token", token)
+        .build()
+
+    httpClient.newCall(request).enqueue(object : Callback {
         override fun onFailure(call: Call, e: IOException) {
             callback(null, e)
         }
@@ -98,7 +138,6 @@ fun getRequest(url: String, jsonBody: String, callback: (String?, Exception?) ->
 }
 
 fun putRequest(url: String, jsonBody: String, callback: (String?, Exception?) -> Unit) {
-    val client = OkHttpClient()
     val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
     val requestBody = jsonBody.toRequestBody(mediaType)
     val request = Request.Builder()
@@ -106,7 +145,33 @@ fun putRequest(url: String, jsonBody: String, callback: (String?, Exception?) ->
         .put(requestBody)
         .build()
 
-    client.newCall(request).enqueue(object : Callback {
+    httpClient.newCall(request).enqueue(object : Callback {
+        override fun onFailure(call: Call, e: IOException) {
+            callback(null, e)
+        }
+
+        override fun onResponse(call: Call, response: Response) {
+            response.use {
+                if (!response.isSuccessful) {
+                    callback(null, IOException("Unexpected code $response"))
+                } else {
+                    callback(response.body?.string(), null)
+                }
+            }
+        }
+    })
+}
+
+fun putRequest(url: String, jsonBody: String, token: String, callback: (String?, Exception?) -> Unit) {
+    val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
+    val requestBody = jsonBody.toRequestBody(mediaType)
+    val request = Request.Builder()
+        .url(url)
+        .put(requestBody)
+        .header("token", token)
+        .build()
+
+    httpClient.newCall(request).enqueue(object : Callback {
         override fun onFailure(call: Call, e: IOException) {
             callback(null, e)
         }
@@ -124,13 +189,12 @@ fun putRequest(url: String, jsonBody: String, callback: (String?, Exception?) ->
 }
 
 fun deleteRequest(url: String, callback: (String?, Exception?) -> Unit) {
-    val client = OkHttpClient()
     val request = Request.Builder()
         .url(url)
         .delete()
         .build()
 
-    client.newCall(request).enqueue(object : Callback {
+    httpClient.newCall(request).enqueue(object : Callback {
         override fun onFailure(call: Call, e: IOException) {
             callback(null, e)
         }
@@ -197,6 +261,17 @@ suspend fun getCurrentGeoJsonPoint(context: Context): String = suspendCoroutine 
 }
 
 // Guardar token
+/*
+* espera un contexto y una respuesta JSON como cadena.
+* Analiza la respuesta JSON para extraer el token de autenticación y el ID de usuario
+* y los guarda en las preferencias compartidas del dispositivo.
+* ejemplo de json esperado:
+* {
+*  "token": "your_auth_token",
+*  "id": "user_id"
+* }
+*
+*/
 fun saveAuth(context: Context, res: String?) {
     try {
         val json = JSONObject(res ?: "")
@@ -270,6 +345,11 @@ fun addTaxis(map: MapView, icon: Drawable, taxis: List<List<Double>>) {
         }
     }
 }
+
+fun removeAllMarkers(map: MapView) {
+    map.overlays.clear()
+}
+
 
 // Crear un punto en el mapa con un icono y coordenadas específicas
 fun createPoint(map: MapView, icon: Drawable, coordinates: String) {

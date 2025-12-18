@@ -52,7 +52,6 @@ class signInActivity : AppCompatActivity() {
     }
 
     private fun initComponent() {
-        isAuth()
         formatHtml()
         initRegisterText()
 
@@ -68,15 +67,6 @@ class signInActivity : AppCompatActivity() {
 
         register.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
-        }
-    }
-
-    private fun isAuth() {
-        val token = getAuthToken(this)
-
-        if (token != null) {
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
         }
     }
 
