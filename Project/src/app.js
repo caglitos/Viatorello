@@ -20,6 +20,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import authRoutes from "./routes/auth.routes.js";
 import driverRoutes from "./routes/driver.routes.js";
+import time from "./routes/time.routes.js";
 
 const app = express();
 
@@ -48,5 +49,6 @@ app.use(express.json());
 // Rutas
 app.use("/api/auth", authRoutes);
 app.use("/api/driver", driverRoutes);
+app.use("/api/time", time);
 
 export default app;

@@ -11,7 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 
 class LoadingActivity : AppCompatActivity() {
-    private val TAG = "Loading Activity"
+    private var TAG = "Loading Activity"
     private val profileURL = "$BASE_URL/auth/profile"
     private val updateCoordsURL = "$BASE_URL/auth/update-coords"
     
@@ -38,7 +38,6 @@ class LoadingActivity : AppCompatActivity() {
 
     private fun isAuth() {
         val token = getAuthToken(this) ?: return startActivity(Intent(this, RegisterActivity::class.java))
-
         getRequest(profileURL, "", token) { res, error ->
             if (error != null || res.isNullOrEmpty()) {
                 startActivity(Intent(this, RegisterActivity::class.java))

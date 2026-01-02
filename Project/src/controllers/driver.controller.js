@@ -24,35 +24,22 @@ import mongoose from "mongoose";
 export const register = async (req, res) => {
     try {
         const {
-            fullName,
+            name,
+            lastName,
             email,
             password,
-            number,
-            currentTrip,
             currentLocation,
-            isOnline,
-            vehicle,
-            documents,
         } = req.body;
 
         const passwordHash = await bcrypt.hash(password, 10);
 
         const newDriver = new Driver({
-            fullName: fullName.trim(),
+            name: name.trim(),
+            lastName: lastName.trim(),
             email: email.toLowerCase().trim(),
             password: passwordHash,
-            number: number,
-            currentTrip: currentTrip || {
-                type: "Point",
-                coordinates: [0, 0],
-            },
-            currentLocation: currentLocation || {
-                type: "Point",
-                coordinates: [0, 0],
-            },
-            isOnline: isOnline !== undefined ? isOnline : false,
-            vehicle: vehicle || {},
-            documents: documents || {},
+            currentLocation,
+            isOnline: true,
         });
 
         const driverSaved = await newDriver.save();
@@ -60,27 +47,24 @@ export const register = async (req, res) => {
 
         res.cookie("token", token);
 
-        console.log("Registration successful!");
         return res.json({
             message: "Registration successful! Now send your foto.",
             id: driverSaved._id,
-            fullName: driverSaved.fullName,
+            fullName: driverSaved.name + " " + driverSaved.lastName,
+            name: driverSaved.name,
+            lastName: driverSaved.lastName,
             email: driverSaved.email,
-            currentTrip: driverSaved.currentTrip,
-            currentLocation: driverSaved.currentLocation,
-            isOnline: driverSaved.isOnline,
-            vehicle: driverSaved.vehicle,
-            documents: driverSaved.documents,
             token: token,
         });
     } catch (error) {
         console.log("Error details:", error);
         res.status(500).json({
             message: "Error registering driver",
-            error: error.message,
+            error,
         });
     }
 };
+
 
 export const registerPhoto = async (req, res) => {
     try {
@@ -94,11 +78,23 @@ export const registerPhoto = async (req, res) => {
         const data = Buffer.from(matches[2], "base64");
 
         const driverFound = await Driver.find(
-            { id: mid },
+            {id: mid},
+        ).select(
+            "-password " +
+            "-currentTrip " +
+            "-currentLocation " +
+            "-number -vehicle " +
+            "-documents " +
+            "-rating " +
+            "-totalTrips " +
+            "-totalEarnings " +
+            "-pets " +
+            "-isVerified " +
+            "-subscription"
         );
 
         if (!driverFound) {
-            return res.status(404).json({ message: "Driver not found" });
+            return res.status(404).json({message: "Driver not found"});
         }
 
         const newPhoto = new DriverPhoto({
@@ -107,22 +103,12 @@ export const registerPhoto = async (req, res) => {
             data: data,
         });
 
-        const photoSaved = await newPhoto.save();
+        await newPhoto.save();
 
         return res.json({
             message: "Photo uploaded successfully",
-            driver: {
-                id: driverFound._id,
-                fullName: driverFound.fullName,
-                email: driverFound.email,
-                createdAt: driverFound.createdAt,
-                updatedAt: driverFound.updatedAt,
-            },
-            photo: {
-                id: photoSaved._id,
-                contentType: contentType,
-                size: data.length,
-            },
+            driverFound,
+            newPhoto
         });
     } catch (error) {
         console.log(error);
@@ -132,6 +118,18 @@ export const registerPhoto = async (req, res) => {
         });
     }
 };
+
+export const registerData = async (req, res) => {
+    try {
+        const {number, vehicle, documents, pets} = req.body;
+
+
+
+        return res.status().json({});
+    } catch (error) {
+        return res.status(500).json({message: "Internal Server Error", error});
+    }
+}
 
 // This function logs in a driver and returns their information along with a token.
 export const login = async (req, res) => {
@@ -207,7 +205,7 @@ export const logout = async (req, res) => {
 // This function gets nearby drivers
 export const nearby = async (req, res) => {
     try {
-        const { latitude, longitude } = req.params;
+        const {latitude, longitude} = req.params;
         const overLap = 50;
         let minDistance = 0;
         let maxDistance = 500;
@@ -235,7 +233,7 @@ export const nearby = async (req, res) => {
         }
 
         if (drivers.length === 0) {
-            return res.status(204).json({ message: "No drivers found nearby" });
+            return res.status(204).json({message: "No drivers found nearby"});
         }
 
         // Formatea los resultados
@@ -252,41 +250,58 @@ export const nearby = async (req, res) => {
             msg: `Success, found ${drivers.length} drivers, in a radius of ${maxDistance} meters`,
             drivers: driversData,
         });
-
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .json({ message: "Error retrieving nearby drivers", error: error });
+            .json({message: "Error retrieving nearby drivers", error: error});
     }
 };
 
 export const profile = async (req, res) => {
-    const { id } = req.params;
+    const {id} = req.params;
 
     try {
         const driverFound = await Driver.findOne({
-            "_id": id,
-        });
+            "_id": id, "isOnline": true,
+            // "subscription.isSubscribed": true
+        }).select("-password");
 
         if (!driverFound) {
-            return res.status(204).json({ message: "Driver not found" });
+            return res.status(204).json({message: "Driver not found"});
         }
 
-        return res.json({
-            message: "Driver profile retrieved successfully",
-            fullName: driverFound.fullName,
-            number: driverFound.number,
-            currentTrip: [
-                Number(driverFound.currentTrip.coordinates[1].toString()),
-                Number(driverFound.currentTrip.coordinates[0].toString()),
-            ],
-            currentLocation: [
-                Number(driverFound.currentLocation.coordinates[1].toString()),
-                Number(driverFound.currentLocation.coordinates[0].toString()),
-            ],
-            vehicle: driverFound.vehicle,
-            isVerificad: driverFound.isVerified,
+        if (driverFound.subscription.isSubscribed) {
+            const lastPay = new Date(driverFound.subscription.lastPayment);
+
+            const durationMonths = driverFound.subscription.subscriptionDuration;
+
+            const endSub = new Date(lastPay);
+
+            endSub.setMonth(endSub.getMonth() + durationMonths);
+
+            if (Date.now() > endSub.getTime()) {
+                driverFound.subscription.isSubscribed = false;
+                await driverFound.save();
+
+                return res
+                    .status(402)
+                    .json({
+                        message: "Driver profile retrieved successfully, subscription expired",
+                        driverFound
+                    });
+
+            }
+
+            return res.status(200).json({
+                message: "Driver profile retrieved successfully",
+                driverFound
+            })
+        }
+
+        return res.status(402).json({
+            message: "Driver profile retrieved successfully, subscription expired",
+            driverFound
         });
     } catch (error) {
         console.log(error);
@@ -294,5 +309,43 @@ export const profile = async (req, res) => {
             message: "Error retrieving driver profile",
             error: error.message,
         });
+    }
+}
+
+export const publicProfile = async (req, res) => {
+    try {
+        const {id} = req.params;
+
+        const driverFound = await Driver.findOne({
+            "_id": id,
+            //"isOnline": true,
+            // "subscription.isSubscribed": true
+        }).select("-password -documents -totalEarnings");
+
+        if (!driverFound) {
+            return res.status(404).json({message: "Driver not found"});
+        }
+
+        if (driverFound.currentTrip === driverFound.currentLocation) {
+            return res.status(400).json({message: "Driver is not available"});
+        }
+
+        console.log(driverFound.currentLocation.coordinates[0].toString())
+        console.log(driverFound.currentLocation.coordinates[1].toString())
+
+        return res.status(200).json({
+            message: "Public driver profile retrieved successfully",
+            driverFound,
+            currentLocation: {
+                type: "Point",
+                coordinates: [
+                    driverFound.currentLocation.coordinates[0].toString(),
+                    driverFound.currentLocation.coordinates[1].toString()
+                ]
+            }
+        });
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({message: "Internal Server Error", error});
     }
 }

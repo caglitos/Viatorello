@@ -45,6 +45,7 @@ import okhttp3.CookieJar
 import okhttp3.HttpUrl
 
 public const val BASE_URL = "http://10.0.2.2:3000/api"
+//public const val BASE_URL = "https://viatorello-production.up.railway.app/api"
 
 // Realizar una solicitudes HTTP
 // Cliente HTTP reutilizable con soporte de cookies
@@ -111,6 +112,10 @@ fun getRequest(url: String, jsonBody: String, callback: (String?, Exception?) ->
             }
         }
     })
+}
+
+fun getRequest(url: String, callback: (String?, Exception?) -> Unit){
+    getRequest(url, "", callback)
 }
 
 fun getRequest(url: String, jsonBody: String, token: String, callback: (String?, Exception?) -> Unit) {

@@ -15,6 +15,7 @@
  */
 package com.example.vitorello
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.Looper
@@ -30,17 +31,14 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.views.MapView
 import android.os.Handler
 import android.content.Context
-import kotlin.reflect.typeOf
+import kotlin.math.log
+import kotlin.text.isNullOrEmpty
 
-@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
     private lateinit var mapView: MapView
     private val context: Context = this@MainActivity
-    private var driversIDs = mutableListOf<String>()
-    private var drivers = JSONObject()
     private val handler = Handler(Looper.getMainLooper())
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +53,6 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             initMap()
-            initTaxiIDs()
         }
     }
 
@@ -81,6 +78,7 @@ class MainActivity : AppCompatActivity() {
         handler.removeCallbacks(updateRunnable)
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private suspend fun initTaxis() {
         mapView = findViewById(R.id.mapa)
 
@@ -95,96 +93,159 @@ class MainActivity : AppCompatActivity() {
         json.put("latitude", coordinates.getDouble(0))
         json.put("longitude", coordinates.getDouble(1))
 
-        val url = "http://10.0.2.2:3000/api/driver/nearby/${
+        val url = "$BASE_URL/driver/nearby/${
             coordinates.getDouble(0)
         }/${coordinates.getDouble(1)}"
-
-//        val url = "https://viatorello-production.up.railway.app/api/driver/nearby/${
-//            coordinates.getDouble(0)
-//        }/${coordinates.getDouble(1)}"
-
-        getRequest( url, "") { res, error ->
-            runOnUiThread {
-                try {
-                    val coords = mutableListOf<List<Double>>()
-                    // Parsear la respuesta del backend
-                    val jsonResponse = JSONObject(res)
-                    val driversArray = jsonResponse.getJSONArray("drivers")
-                    Log.d(TAG, "initTaxis: driversArray $driversArray")
-                    for (i in 0 until driversArray.length()) {
-                        val driverObj = driversArray.getJSONObject(i)
-                        val driverCoords = driverObj.getJSONArray("driverCoordinates")
-                        coords.add(
-                            listOf(
-                                driverCoords.getString(0).toDouble(),
-                                driverCoords.getString(1).toDouble()
-                            )
-                        )
-                    }
-
-                    removeAllMarkers(mapView)
-
-                    addTaxis(
-                        mapView,
-                        resources.getDrawable(R.drawable.location_red, null),
-                        coords
-                    )
-                } catch (e: Exception) {
-                    Log.e("initTaxis", "Error: $e")
-                }
-            }
-        }
-    }
-
-    private suspend fun initTaxiIDs() {
-        val geo = getCurrentGeoJsonPoint(context)
-
-        val geoJSON = JSONObject(geo)
-        val coordinates = geoJSON.getJSONArray("coordinates")
-
-        val url = "http://10.0.2.2:3000/api/driver/nearby/" +
-                "${coordinates.getDouble(0)}/" +
-                "${coordinates.getDouble(1)}"
-//        val url = "https://viatorello-production.up.railway.app/api/driver/nearby/" +
-//                "${coordinates.getDouble(0)}/" +
-//                "${coordinates.getDouble(1)}"
 
         getRequest(url, "") { res, error ->
             if (error != null) {
                 Log.d(TAG, "Error: ${error.message}")
 
-            } else if (res.isNullOrEmpty()) {
+                return@getRequest
+            }
+            if (res.isNullOrEmpty()) {
                 Log.e(TAG, "Respuesta vacía del backend")
-            } else {
-                Log.d(TAG, "Tipo de res: ${(res!!)::class.java.name}")
+
+                return@getRequest
+            }
+
+            runOnUiThread {
+
+                try {
+                    val cords = mutableListOf<List<Double>>()
+                    // Transformar la respuesta del backend
+                    val jsonResponse = JSONObject(res)
+
+                    val driversArray = jsonResponse.getJSONArray("drivers")
+
+                    Log.d(TAG, "initTaxis: driversArray $driversArray")
+
+                    for (i in 0 until driversArray.length()) {
+                        val driverObj = driversArray.getJSONObject(i)
+
+                        val driverCoords = driverObj.getJSONArray("driverCoordinates")
+
+                        cords.add(
+                            listOf(
+                                driverCoords.getString(0).toDouble(),
+                                driverCoords.getString(1).toDouble()
+                            )
+                        )
+
+                    }
+
+                    removeAllMarkers(mapView)
+
+                    addTaxis(
+                        mapView, resources.getDrawable(R.drawable.location_red, null), cords
+                    )
+
+                } catch (e: Exception) {
+                    Log.e("initTaxis", "Error: $e")
+
+                    return@runOnUiThread
+                }
+
                 val jsonResponse = JSONObject(res)
                 val jsonDrivers = jsonResponse.getJSONArray("drivers")
                 val driverIds = mutableListOf<String>()
+
                 for (i in 0 until jsonDrivers.length()) {
                     val driver = jsonDrivers.getJSONObject(i)
                     val driverId = driver.getString("driversId")
                     println("Driver ID: $driverId")
                     driverIds.add(driverId)
                 }
-                getTaxiInfoById(driverIds)
+
+                lifecycleScope.launch {
+                    getTaxiInfoById(driverIds)
+                }
             }
+        }
+    }
+
+    suspend fun getTaxiInfoById(driverIds: List<String>) {
+        val url = "$BASE_URL/driver/public-profile/"
+        var abort = false
+        var time: String
+
+        val geo = getCurrentGeoJsonPoint(context)
+
+        // Parse geo to get latitude and longitude (as backend expects)
+        val geoJson = JSONObject(geo)
+        val coordinates = geoJson.getJSONArray("coordinates")
+
+        val lon1 = coordinates.getDouble(0)
+        val lat1 = coordinates.getDouble(1)
+
+        for (driverId in driverIds) {
+            if (abort) break
+
+            getRequest(url + driverId, "") { res, error ->
+                if (error != null) {
+                    Log.d(TAG, "Error: ${error.message}")
+                    abort = true
+                    return@getRequest
+                }
+                if (res.isNullOrEmpty()) {
+                    Log.e(TAG, "Respuesta vacía del backend")
+                    abort = true
+                    return@getRequest
+                }
+
+                val response = JSONObject(res)
+                val jsonRes = response.getJSONObject("driverFound")
+
+                val lon2 = response.getJSONObject("currentLocation").getJSONArray("coordinates").getString(0)
+                val lat2 = response.getJSONObject("currentLocation").getJSONArray("coordinates").getString(1)
+
+//                val timeUrl = "$BASE_URL/time/getDistanceTime/$lon1/$lat1/$lon2/$lat2"
+                val timeUrl = "$BASE_URL/time/getDistanceTime/90.060901/18.510901/97.060099/18.510099" //test
+
+                Log.d(TAG, timeUrl)
+                
+                getRequest(timeUrl) { resTime, errorTime ->
+                    if (errorTime != null) {
+                        Log.e(TAG, "Error: ${errorTime}")
+                        return@getRequest
+                    }
+                    if (resTime.isNullOrEmpty()) {
+                        Log.e(TAG, "Response null or empty")
+                        return@getRequest
+                    }
+
+                    val jsonResTime = JSONObject(resTime)
+
+                    time = jsonResTime.getString("time")
+
+                    Log.d(TAG, "$time")
+
+                    loadInfo(jsonRes, time)
+
+                }
+
+            }
+
         }
 
     }
 
-    fun getTaxiInfoById(driverIds: List<String>) {
+    fun loadInfo (jsonRes: JSONObject, time: String){
 
-        for (driverId in driverIds) {
-            getRequest(
-                "http://localhost:3000/api/driver/profile/${driverId}", ""
-            ) { response, exception ->
-                if (exception != null) {
-                    println("Error: ${exception.message}")
-                } else {
-                    println("Driver Name: ${response.toString()}")
-                }
-            }
-        }
+        val name = jsonRes.getString("fullName").split(" ")[0]
+        val pets = jsonRes.getBoolean("pets")
+        val petsSymbol = if (pets) "✓" else "✗"
+
+        val vehicle = jsonRes.getJSONObject("vehicle")
+        val car = vehicle.getString("model")
+
+        val rating = jsonRes.getJSONObject("rating")
+        val rate = rating.getDouble("average").toString()
+
+
+        Log.d(TAG, "Time: $time, name: $name, pets: $petsSymbol, car: $car, rate: $rate")
+
+
     }
 
     private fun initAjustes() {
@@ -196,9 +257,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initDestino() {
-        val cargarDestino: ConstraintLayout = findViewById(R.id.clChofer)
+        val chofer: ConstraintLayout = findViewById(R.id.clChofer)
 
-        cargarDestino.setOnClickListener {
+        chofer.setOnClickListener {
             startActivity(Intent(this, taxiDestinoActivity::class.java))
         }
     }

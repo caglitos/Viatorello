@@ -21,31 +21,42 @@ import {
     logout,
     profile,
     nearby,
-    registerPhoto,
+    registerPhoto, publicProfile, registerData,
 } from "../controllers/driver.controller.js";
-import { validateSchema } from "../middlewares/validator.middleware.js";
+import { validateBodySchema } from "../middlewares/validator.middleware.js";
 import {
   loginSchema,
-  driverSchema,
-} from "../schemas/driver.schema.js";
+  driverRegisterSchema,
+} from "../schemas/driverRegisterSchema.js";
 import { photoSchema } from "../schemas/driver.photo.schema.js";
 
 const router = Router();
 
 router.post(
   "/register",
-  validateSchema(driverSchema),
+  validateBodySchema(driverRegisterSchema),
   register
 );
 
-router.post("/register-photo", validateSchema(photoSchema), registerPhoto);
+router.post("/register-photo", validateBodySchema(photoSchema), registerPhoto);
 
-router.post("/login", validateSchema(loginSchema), login);
+router.post("/login", validateBodySchema(loginSchema), login);
+
+router.post(
+    "/register-data",
+    // validateBodySchema(),
+    registerData
+);
 
 router.post("/logout", logout);
 
 router.get("/nearby/:latitude/:longitude", nearby);
 
 router.get("/profile/:id", profile);
+
+router.get(
+    "/public-profile/:id",
+    publicProfile
+);
 
 export default router;

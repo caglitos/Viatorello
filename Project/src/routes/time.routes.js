@@ -16,25 +16,20 @@
 
 import { Router } from "express";
 import {
-    login,
-    register,
-    logout,
-    profile, updateLocation,
-} from "../controllers/auth.controller.js";
-import { authRequiered } from "../middlewares/validateToken.js";
-import { validateBodySchema } from "../middlewares/validator.middleware.js";
-import { registerSchema, loginSchema } from "../schemas/auth.schema.js";
+    getDistanceTime
+} from "../controllers/time.controller.js";
+import { validateParamsSchema } from "../middlewares/validator.middleware.js";
+// import {
+//
+// } from "../schemas/driverRegisterSchema.js";
 
 const router = Router();
 
-router.post("/register", validateBodySchema(registerSchema), register);
+router.get(
+    "/getDistanceTime/:lon1/:lat1/:lon2/:lat2",
+    // validateParamsSchema(),
+    getDistanceTime
+);
 
-router.post("/login", validateBodySchema(loginSchema), login);
-
-router.post("/logout", logout);
-
-router.get("/profile", authRequiered, profile);
-
-router.put("/update-coords", authRequiered, updateLocation);
 
 export default router;

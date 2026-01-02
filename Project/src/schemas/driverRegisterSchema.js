@@ -16,10 +16,20 @@
 
 import {z} from "zod";
 
-const geoPointSchema = z.object({
-    type: z.literal("Point"),
-    coordinates: z.array(z.number()).length(2).optional(), // [longitude, latitude]
-});
+const geoPointSchema =
+z.object({
+    type: z.literal(
+        "Point"
+    ),
+    coordinates: z.array(
+        z.number()
+    )
+        .length(2)
+        .optional(), // [longitude, latitude]
+}).optional()
+  .default({
+      type: "Point", coordinates: [0, 0],
+  });
 
 const vehicleSchema = z
     .object({
@@ -31,39 +41,34 @@ const vehicleSchema = z
     })
     .partial();
 
-const documentVerificationSchema = z.object({
+const documentSchema = z.object({
     number: z.string().optional(),
+
     expiryDate: z
         .string()
         .optional()
-        .refine(
-            (date) => {
-                if (!date) return true;
-                return !isNaN(Date.parse(date));
-            },
-            {
-                message:
-                    "Invalid date format. Use ISO string format (YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ)",
-            }
-        ),
+        .refine((date) => {
+            if (!date) return true;
+            return !isNaN(Date.parse(date));
+        }, {
+            message: "Invalid date format. Use ISO string format (YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ)",
+        }),
+
     isVerified: z.boolean().default(false),
 });
 
 const documentsSchema = z.object({
-    driverLicense: documentVerificationSchema,
-    vehicleRegistration: documentVerificationSchema,
-    insurance: documentVerificationSchema,
+    driverLicense: documentSchema,
+    vehicleRegistration: documentSchema,
+    insurance: documentSchema,
 });
 
-export const driverSchema = z.object({
-    fullName: z.string().trim(),
+export const driverRegisterSchema = z.object({
+    name: z.string().trim(),
+    lastName: z.string().trim(),
+
     email: z
-        .string({
-            required_error: "Email is required",
-        })
-        .email({
-            message: "Invalid email",
-        })
+        .email()
         .trim(),
     password: z
         .string({
@@ -72,29 +77,17 @@ export const driverSchema = z.object({
         .min(4, {
             message: "Password must be at least 8 characters long",
         }),
-    currentTrip: geoPointSchema.optional().default({
-        type: "Point",
-        coordinates: [0, 0],
-    }),
-    currentLocation: geoPointSchema.optional().default({
-        type: "Point",
-        coordinates: [0, 0],
-    }),
+
+    currentTrip: geoPointSchema,
+
+    currentLocation: geoPointSchema,
 
     isOnline: z.boolean().default(false),
 
-    number: z.number(),
-
-    vehicle: vehicleSchema.optional(),
-
-    documents: documentsSchema.optional(),
 });
 
 export const loginSchema = z.object({
     email: z
-        .string({
-            required_error: "Email is required",
-        })
         .email({
             message: "Invalid email",
         })
@@ -106,31 +99,20 @@ export const loginSchema = z.object({
         .min(4, {
             message: "Password must be at least 8 characters long",
         }),
-    currentLocation: geoPointSchema.optional().default({
-        type: "Point",
-        coordinates: [0, 0],
-    }),
+    currentLocation: geoPointSchema,
 
     isOnline: z.boolean().default(false),
 
-    lastLocationUpdate: geoPointSchema.optional().default({
-        type: "Point",
-        coordinates: [0, 0],
-    }),
+    lastLocationUpdate: geoPointSchema,
 });
 
 export const updateLocationSchema = z.object({
     email: z
-        .string({
-            required_error: "Email is required",
-        })
         .email({
             message: "Invalid email",
         })
         .trim(),
-    currentLocation: geoPointSchema.optional().default({
-        type: "Point",
-        coordinates: [0, 0],
-    }),
+    currentLocation: geoPointSchema,
+
     isOnline: z.boolean().default(false),
 });
