@@ -30,19 +30,16 @@ export const registerSchema = z.object({
     .min(3, { message: "Username must be at least 3 characters" })
     .max(30, { message: "Username too long" }),
 
-  email: z.string().email({ message: "Invalid email" }),
+  email: z.email({ message: "Invalid email" }),
 
   password: z
     .string()
-    .min(6, { message: "Password must be at least 6 characters" })
-    .regex(/[A-Z]/, {
-      message: "Password must contain at least one uppercase letter",
-    }),
+    .min(26, { message: "Password must be at least 6 characters" })
+    ,
 
   // Optional fields for registration
   currentLocation: geoPointSchema.optional(),
   isOnline: z.boolean().optional().default(false),
-  lastLocationUpdate: z.string().datetime().optional(),
   currentTrip: z.boolean().optional(),
 });
 

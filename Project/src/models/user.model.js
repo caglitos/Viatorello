@@ -50,10 +50,6 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    lastLocationUpdate: {
-      type: Date,
-      default: null,
-    },
     // Current trip information (if in one)
     currentTrip: {
       type: Boolean,

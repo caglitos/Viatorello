@@ -34,7 +34,12 @@ import {createAccesToken} from "../libs/jwt.js";
 //This function generates a new user and saves it to the database.
 export const register = async (req, res) => {
     const {
-        username, email, password, currentLocation, isOnline, lastLocationUpdate, currentTrip,
+        username,
+        email,
+        password,
+        currentLocation,
+        isOnline,
+        currentTrip,
     } = req.body;
 
     try {
@@ -48,7 +53,6 @@ export const register = async (req, res) => {
             currentLocation: currentLocation || {
                 type: "Point", coordinates: [0, 0],
             },
-            lastLocationUpdate: lastLocationUpdate || null,
         });
 
         if (isOnline !== undefined) newUser.isOnline = isOnline; else newUser.isOnline = false;
@@ -68,7 +72,6 @@ export const register = async (req, res) => {
             updatedAt: userSaved.updatedAt,
             currentLocation: userSaved.currentLocation,
             isOnline: userSaved.isOnline,
-            lastLocationUpdate: userSaved.lastLocationUpdate,
             currentTrip: userSaved.currentTrip,
             token: token,
         });

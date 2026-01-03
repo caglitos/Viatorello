@@ -39,7 +39,7 @@ export const getDistanceTime = async (req, res) => {
 
 				if (minutes || hours) time = `${mm}:${ss}`;
 
-				if (hours) time = `${hh}:${mm}:${ss}`;json({ message: "Internal Server Error",  error});
+				if (hours) time = `${hh}:${mm}:${ss}`;
 
 				res.status(200).json({
 					message: "Distance and time calculated successfully",
