@@ -85,23 +85,11 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:textSize="20sp"
-                app:layout_constraintBottom_toTopOf="@id/tvNumero"
+                app:layout_constraintBottom_toTopOf="@id/tvTiempo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="@string/driver" />
-
-            <TextView
-                android:id="@+id/tvNumero"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toTopOf="@id/tvTiempo"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvChofer"
-                tools:text="@string/number" />
 
             <TextView
                 android:id="@+id/tvTiempo"
@@ -109,26 +97,38 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:textSize="20sp"
-                app:layout_constraintBottom_toTopOf="@id/tvAuto"
+                app:layout_constraintBottom_toTopOf="@id/tvCar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvNumero"
+                app:layout_constraintTop_toBottomOf="@id/tvChofer"
                 tools:text="@string/time" />
 
             <TextView
-                android:id="@+id/tvAuto"
+                android:id="@+id/tvCar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:textSize="20sp"
-                app:layout_constraintBottom_toTopOf="@id/tvRating"
+                app:layout_constraintBottom_toTopOf="@id/tvRate"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvTiempo"
                 tools:text="@string/car" />
 
             <TextView
-                android:id="@+id/tvRating"
+                android:id="@+id/tvRate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@id/tvPets"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvCar"
+                tools:text="@string/rating" />
+
+            <TextView
+                android:id="@+id/tvPets"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
@@ -136,8 +136,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvAuto"
-                tools:text="@string/rating" />
+                app:layout_constraintTop_toBottomOf="@id/tvRate"
+                tools:text="Mascota:" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <FrameLayout

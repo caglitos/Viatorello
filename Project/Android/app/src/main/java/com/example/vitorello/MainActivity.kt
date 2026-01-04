@@ -31,6 +31,7 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.views.MapView
 import android.os.Handler
 import android.content.Context
+import android.widget.TextView
 import kotlin.math.log
 import kotlin.text.isNullOrEmpty
 
@@ -153,7 +154,6 @@ class MainActivity : AppCompatActivity() {
                 for (i in 0 until jsonDrivers.length()) {
                     val driver = jsonDrivers.getJSONObject(i)
                     val driverId = driver.getString("driversId")
-                    println("Driver ID: $driverId")
                     driverIds.add(driverId)
                 }
 
@@ -168,6 +168,7 @@ class MainActivity : AppCompatActivity() {
         val url = "$BASE_URL/driver/public-profile/"
         var abort = false
         var time: String
+        val data = mutableListOf<List<String>>()
 
         val geo = getCurrentGeoJsonPoint(context)
 
@@ -180,6 +181,7 @@ class MainActivity : AppCompatActivity() {
 
         for (driverId in driverIds) {
             if (abort) break
+            val indexDriver = mutableListOf<String>()
 
             getRequest(url + driverId, "") { res, error ->
                 if (error != null) {
@@ -196,14 +198,27 @@ class MainActivity : AppCompatActivity() {
                 val response = JSONObject(res)
                 val jsonRes = response.getJSONObject("driverFound")
 
-                val lon2 = response.getJSONObject("currentLocation").getJSONArray("coordinates").getString(0)
-                val lat2 = response.getJSONObject("currentLocation").getJSONArray("coordinates").getString(1)
+                indexDriver.add(0, jsonRes.getString("name"))
+
+                if (jsonRes.getBoolean("pets")) {
+                    indexDriver.add(1, "✓")
+                } else {
+                    indexDriver.add(1, "✗")
+                }
+                indexDriver.add(2, jsonRes.getJSONObject("vehicle").getString("model"))
+                indexDriver.add(3, jsonRes.getJSONObject("rating").getDouble("average").toString())
+
+                val lon2 = response.getJSONObject("currentLocation").getJSONArray("coordinates")
+                    .getString(0)
+                val lat2 = response.getJSONObject("currentLocation").getJSONArray("coordinates")
+                    .getString(1)
 
 //                val timeUrl = "$BASE_URL/time/getDistanceTime/$lon1/$lat1/$lon2/$lat2"
-                val timeUrl = "$BASE_URL/time/getDistanceTime/90.060901/18.510901/97.060099/18.510099" //test
+                val timeUrl =
+                    "$BASE_URL/time/getDistanceTime/90.060901/18.510901/97.060099/18.510099" //test
 
                 Log.d(TAG, timeUrl)
-                
+
                 getRequest(timeUrl) { resTime, errorTime ->
                     if (errorTime != null) {
                         Log.e(TAG, "Error: ${errorTime}")
@@ -218,32 +233,56 @@ class MainActivity : AppCompatActivity() {
 
                     time = jsonResTime.getString("time")
 
-                    Log.d(TAG, "$time")
+                    indexDriver.add(4, time)
 
-                    loadInfo(jsonRes, time)
+                    data.add(indexDriver)
 
+                    if (driverId == driverIds[driverIds.size - 1]) loadInfo(data)
                 }
 
+
             }
+
 
         }
 
     }
 
-    fun loadInfo (jsonRes: JSONObject, time: String){
+    /*
+     * Ejemplo de la estructura de la lista data.
+     *
+     * [
+     *      [
+     *          "carlos"   → Nombre,
+     *          "✓"        → Mascotas,
+     *          "Corvette" → Modelo del auto,
+     *          "*****"    → Calificación,
+     *          "5:10"     → Tiempo,
+     *      ],
+     *      [
+     *          "Jan"      → Nombre,
+     *          "✗"        → Mascotas,
+     *          "Camaro"   → Modelo del auto,
+     *          "**"       → Calificación,
+     *          "5:10"     → Tiempo,
+     *      ]
+     * ]
+     *
+     */
 
-        val name = jsonRes.getString("fullName").split(" ")[0]
-        val pets = jsonRes.getBoolean("pets")
-        val petsSymbol = if (pets) "✓" else "✗"
 
-        val vehicle = jsonRes.getJSONObject("vehicle")
-        val car = vehicle.getString("model")
+    fun loadInfo(data: List<List<String>>) {
+        val nameTV = findViewById<TextView>(R.id.tvChofer)
+        val timeTV = findViewById<TextView>(R.id.tvTiempo)
+        val carTV = findViewById<TextView>(R.id.tvCar)
+        val rateTV = findViewById<TextView>(R.id.tvRate)
+        val petsTV = findViewById<TextView>(R.id.tvPets)
 
-        val rating = jsonRes.getJSONObject("rating")
-        val rate = rating.getDouble("average").toString()
-
-
-        Log.d(TAG, "Time: $time, name: $name, pets: $petsSymbol, car: $car, rate: $rate")
+        nameTV.text = data[0][0]
+        petsTV.text = data[0][1]
+        carTV.text = data[0][2]
+        rateTV.text = data[0][3]
+        timeTV.text = data[0][4]
 
 
     }

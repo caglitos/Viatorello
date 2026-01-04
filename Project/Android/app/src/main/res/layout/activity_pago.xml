@@ -72,7 +72,7 @@
         app:layout_constraintTop_toBottomOf="@id/bTarjeta" />
 
     <TextView
-        android:id="@+id/tvNumero"
+        android:id="@+id/tvTiempo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -112,7 +112,7 @@
         app:layout_constraintTop_toBottomOf="@id/tvTarjeta" />
 
     <TextView
-        android:id="@+id/tvTiempo"
+        android:id="@+id/tvCar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -121,7 +121,7 @@
         android:textColor="@color/white"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="@id/bTarjeta"
-        app:layout_constraintTop_toBottomOf="@id/tvNumero" />
+        app:layout_constraintTop_toBottomOf="@id/tvTiempo" />
 
     <TextView
         android:id="@+id/tvTiempo1"
@@ -147,7 +147,7 @@
         android:textColor="@color/white"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="@id/bTarjeta"
-        app:layout_constraintTop_toBottomOf="@id/tvTiempo" />
+        app:layout_constraintTop_toBottomOf="@id/tvCar" />
 
     <TextView
         android:id="@+id/tvTarifa1"

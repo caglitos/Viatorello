@@ -34,8 +34,7 @@ export const registerSchema = z.object({
 
   password: z
     .string()
-    .min(26, { message: "Password must be at least 6 characters" })
-    ,
+    .min(6, { message: "Password must be at least 6 characters" }),
 
   // Optional fields for registration
   currentLocation: geoPointSchema.optional(),
