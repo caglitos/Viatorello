@@ -37,7 +37,14 @@ import kotlin.text.isNullOrEmpty
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
+    private var loading: Boolean = true
     private lateinit var mapView: MapView
+    private lateinit var nameTV: TextView
+    private lateinit var timeTV: TextView
+    private lateinit var carTV: TextView
+    private lateinit var rateTV: TextView
+    private lateinit var petsTV: TextView
+    private val data = mutableListOf<List<String>>()
     private val context: Context = this@MainActivity
     private val handler = Handler(Looper.getMainLooper())
 
@@ -61,6 +68,7 @@ class MainActivity : AppCompatActivity() {
         override fun run() {
             lifecycleScope.launch {
                 initTaxis()
+                loadInfo(data)
             }
             // execute every second
             handler.postDelayed(this, 5000)
@@ -168,7 +176,6 @@ class MainActivity : AppCompatActivity() {
         val url = "$BASE_URL/driver/public-profile/"
         var abort = false
         var time: String
-        val data = mutableListOf<List<String>>()
 
         val geo = getCurrentGeoJsonPoint(context)
 
@@ -237,7 +244,9 @@ class MainActivity : AppCompatActivity() {
 
                     data.add(indexDriver)
 
-                    if (driverId == driverIds[driverIds.size - 1]) loadInfo(data)
+                    if (data.size == driverIds.size)
+                        loading = false
+
                 }
 
 
@@ -271,20 +280,24 @@ class MainActivity : AppCompatActivity() {
      */
 
 
-    fun loadInfo(data: List<List<String>>) {
-        val nameTV = findViewById<TextView>(R.id.tvChofer)
-        val timeTV = findViewById<TextView>(R.id.tvTiempo)
-        val carTV = findViewById<TextView>(R.id.tvCar)
-        val rateTV = findViewById<TextView>(R.id.tvRate)
-        val petsTV = findViewById<TextView>(R.id.tvPets)
+    private fun loadInfo(data: List<List<String>>) {
+        if (loading) return
+
+        nameTV = findViewById(R.id.tvChofer)
+        timeTV = findViewById(R.id.tvTiempo)
+        carTV  = findViewById(R.id.tvCar)
+        rateTV = findViewById(R.id.tvRate)
+        petsTV = findViewById(R.id.tvPets)
+0
 
         nameTV.text = data[0][0]
-        petsTV.text = data[0][1]
+//        petsTV.text = "${R.string.pets} ${data[0][1]}"
+        petsTV.text = "mascotas: ${data[0][1]}"
         carTV.text = data[0][2]
         rateTV.text = data[0][3]
         timeTV.text = data[0][4]
 
-
+        loading = true
     }
 
     private fun initAjustes() {
@@ -341,7 +354,6 @@ class MainActivity : AppCompatActivity() {
 
         Log.d("MainActivity", "initMap: OSMDroid configurado exitosamente")
     }
-
 
 }
 

@@ -32,18 +32,17 @@
         android:id="@+id/FLmapa"
         android:layout_width="match_parent"
         android:layout_height="220dp"
+        android:background="@drawable/border"
         app:layout_constraintBottom_toTopOf="@id/clChofer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivLogo"
-        android:background="@drawable/border">
+        app:layout_constraintTop_toBottomOf="@id/ivLogo">
 
         <org.osmdroid.views.MapView
             android:id="@+id/mapa"
             android:layout_width="match_parent"
             android:layout_height="220dp"
-            android:background="@drawable/border"
-            />
+            android:background="@drawable/border" />
 
         <View
             android:layout_width="match_parent"
@@ -85,11 +84,12 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:textSize="20sp"
+                android:text="@string/loading"
+
                 app:layout_constraintBottom_toTopOf="@id/tvTiempo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="@string/driver" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tvTiempo"
@@ -97,11 +97,11 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:textSize="20sp"
+                android:text="@string/loading"
                 app:layout_constraintBottom_toTopOf="@id/tvCar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvChofer"
-                tools:text="@string/time" />
+                app:layout_constraintTop_toBottomOf="@id/tvChofer" />
 
             <TextView
                 android:id="@+id/tvCar"
@@ -109,11 +109,11 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:textSize="20sp"
+                android:text="@string/loading"
                 app:layout_constraintBottom_toTopOf="@id/tvRate"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvTiempo"
-                tools:text="@string/car" />
+                app:layout_constraintTop_toBottomOf="@id/tvTiempo" />
 
             <TextView
                 android:id="@+id/tvRate"
@@ -121,11 +121,11 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:textSize="20sp"
+                android:text="@string/loading"
                 app:layout_constraintBottom_toTopOf="@id/tvPets"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvCar"
-                tools:text="@string/rating" />
+                app:layout_constraintTop_toBottomOf="@id/tvCar" />
 
             <TextView
                 android:id="@+id/tvPets"
@@ -133,11 +133,11 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:textSize="20sp"
+                android:text="@string/loading"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvRate"
-                tools:text="Mascota:" />
+                app:layout_constraintTop_toBottomOf="@id/tvRate" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <FrameLayout

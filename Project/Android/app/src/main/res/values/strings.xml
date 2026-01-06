@@ -52,4 +52,5 @@
     <string name="pwdOnlyLetters">La contraseña no puede ser solo letras</string>
     <string name="pwdValid">La contraseña funciona</string>
     <string name="pwdInvalid">La contraseña no funciona :(</string>
+    <string name="loading">Cargando...</string>
 </resources>

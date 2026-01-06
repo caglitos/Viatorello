@@ -18,40 +18,82 @@ export const getDistanceTime = async (req, res) => {
 	try {
 		const {  lon1, lat1,  lon2, lat2 } = req.params;
 
-		let time
+		// Create an AbortController to handle timeout
+		const controller = new AbortController();
+		const timeout = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
-		fetch(`http://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=false`, {
-			method: "GET"
-		})
-			.then(response => response.json())
-			.then(data => {
-				const duration = Math.floor(data.routes[0].duration);
+		try {
+			const response = await fetch(
+				`http://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=false`,
+				{
+					method: "GET",
+					signal: controller.signal
+				}
+			);
 
-				const hours = Math.floor(duration / 3600);
-				const minutes = Math.floor((duration % 3600) / 60);
-				const seconds = Math.floor(duration % 60);
+			clearTimeout(timeout);
 
-				const hh = String(hours).padStart(2, '0');
-				const mm = String(minutes).padStart(2, '0');
-				const ss = String(seconds).padStart(2, '0');
-
-				let time = `${ss}`;
-
-				if (minutes || hours) time = `${mm}:${ss}`;
-
-				if (hours) time = `${hh}:${mm}:${ss}`;
-
-				res.status(200).json({
-					message: "Distance and time calculated successfully",
-					time: time
+			if (!response.ok) {
+				return res.status(500).json({
+					message: "Error fetching route from OSRM service",
+					error: `HTTP ${response.status}`
 				});
-			})
-			.catch(error => res.status(500).json({
-				message: "Internal Server Error",  error
-			}));
+			}
+
+			const data = await response.json();
+
+			// Validate response structure
+			if (!data.routes || !data.routes[0] || typeof data.routes[0].duration !== 'number') {
+				return res.status(400).json({
+					message: "Invalid route data received",
+					error: "No valid route found"
+				});
+			}
+
+			const duration = Math.floor(data.routes[0].duration);
+
+			const hours = Math.floor(duration / 3600);
+			const minutes = Math.floor((duration % 3600) / 60);
+			const seconds = Math.floor(duration % 60);
+
+			const hh = String(hours).padStart(2, '0');
+			const mm = String(minutes).padStart(2, '0');
+			const ss = String(seconds).padStart(2, '0');
+
+			let time = `${ss}`;
+
+			if (minutes || hours) time = `${mm}:${ss}`;
+
+			if (hours) time = `${hh}:${mm}:${ss}`;
+
+			return res.status(200).json({
+				message: "Distance and time calculated successfully",
+				time: time
+			});
+
+		} catch (fetchError) {
+			clearTimeout(timeout);
+
+			if (fetchError.name === 'AbortError') {
+				console.error('Request timeout:', fetchError);
+				return res.status(504).json({
+					message: "Request timeout: OSRM service is not responding",
+					error: "Gateway Timeout"
+				});
+			}
+
+			console.error('Fetch error:', fetchError);
+			return res.status(500).json({
+				message: "Failed to connect to OSRM service",
+				error: fetchError.message
+			});
+		}
 
 	} catch (error) {
-		console.log(error)
-		return res.status(500).json({ message: "Internal Server Error",  error});
+		console.error('Unexpected error:', error);
+		return res.status(500).json({
+			message: "Internal server error",
+			error: error.message
+		});
 	}
 }
